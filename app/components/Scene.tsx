@@ -1,15 +1,27 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import LoadingOverlay from "./LoadingOverlay";
 
-function SceneContents({ loaded }: { loaded: boolean }) {
+function SceneContents({ onLoaded }: { onLoaded: () => void }) {
   const lightRef = useRef<THREE.PointLight>(null);
   const intensityRef = useRef(0);
+  const loadedRef = useRef(false);
+
+  // TODO: replace timer with useProgress() from @react-three/drei once real
+  // 3D models (desk, lamp, journal) are added in step 6 — useProgress needs
+  // actual asset files to track, placeholder geometry has nothing to load
+  useEffect(() => {
+    const t = setTimeout(() => {
+      loadedRef.current = true;
+      onLoaded();
+    }, 2000);
+    return () => clearTimeout(t);
+  }, [onLoaded]);
 
   useFrame((_, delta) => {
-    if (loaded && intensityRef.current < 8) {
+    if (loadedRef.current && intensityRef.current < 8) {
       intensityRef.current = Math.min(intensityRef.current + delta * 5, 8);
       if (lightRef.current) {
         lightRef.current.intensity = intensityRef.current;
@@ -44,16 +56,13 @@ function SceneContents({ loaded }: { loaded: boolean }) {
   );
 }
 
-export default function Scene() {
+export default function Scene({ onLoaded }: { onLoaded: () => void }) {
   const [loaded, setLoaded] = useState(false);
 
-  // TODO: replace timer with useProgress() from @react-three/drei once real
-  // 3D models (desk, lamp, journal) are added in step 6 — useProgress needs
-  // actual asset files to track, placeholder geometry has nothing to load
-  useEffect(() => {
-    const t = setTimeout(() => setLoaded(true), 1000);
-    return () => clearTimeout(t);
-  }, []);
+  const handleLoaded = () => {
+    setLoaded(true);
+    onLoaded();
+  };
 
   return (
     <>
@@ -67,7 +76,7 @@ export default function Scene() {
         }}
       >
         <Canvas camera={{ position: [0, 2, 4], fov: 50 }}>
-          <SceneContents loaded={loaded} />
+          <SceneContents onLoaded={handleLoaded} />
         </Canvas>
       </div>
     </>
