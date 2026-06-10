@@ -1,5 +1,11 @@
 "use client";
 import { useSceneLoaded } from "./components/SceneContext";
+// PLANNED — Step 6 addition (after real 3D models):
+// Lamp lights up → desk visible for ~2s → small text prompt appears: "open the journal..."
+// User clicks or presses any key → journal panels fade/slide in
+// Currently journal appears automatically after lamp loads (no user action)
+// To implement: add a second state `journalOpen` after `loaded`, wire prompt UI,
+// then gate the journal opacity on `journalOpen` instead of `loaded`
 export default function Home() {
   const loaded = useSceneLoaded();
   return (
