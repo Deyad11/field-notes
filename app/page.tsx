@@ -1,11 +1,14 @@
 "use client";
 import { useSceneLoaded } from "./components/SceneContext";
+import Link from "next/link";
+
 // PLANNED — Step 6 addition (after real 3D models):
 // Lamp lights up → desk visible for ~2s → small text prompt appears: "open the journal..."
 // User clicks or presses any key → journal panels fade/slide in
 // Currently journal appears automatically after lamp loads (no user action)
 // To implement: add a second state `journalOpen` after `loaded`, wire prompt UI,
 // then gate the journal opacity on `journalOpen` instead of `loaded`
+
 export default function Home() {
   const loaded = useSceneLoaded();
   return (
@@ -14,10 +17,12 @@ export default function Home() {
         display: "flex",
         gap: "0",
         width: "min(900px, 95vw)",
-        minHeight: "580px",
-        boxShadow: "0 8px 48px rgba(0,0,0,0.6)",
+        height: "min(580px, 80vh)",
+        borderRight: "none",
+        boxShadow: "inset -8px 0 15px rgba(0,0,0,0.12)",
         opacity: loaded ? 1 : 0,
         transition: "opacity 1s ease 0.3s",
+        borderRadius: "2px 4px 4px 2px",
       }}
     >
       {/* LEFT PAGE — About */}
@@ -26,7 +31,8 @@ export default function Home() {
           flex: 1,
           background: "#F2EFE9",
           padding: "3rem 2.5rem",
-          borderRight: "2px solid #C8B89A",
+          borderRight: "none",
+          boxShadow: "inset -8px 0 15px rgba(0,0,0,0.12)",
           display: "flex",
           flexDirection: "column",
           gap: "1.2rem",
@@ -93,7 +99,14 @@ export default function Home() {
           I read too many web novels. Some of them, I think, read back.
         </p>
       </div>
-
+      {/* spine */}
+      <div
+        style={{
+          width: "6px",
+          background: "linear-gradient(to right, #B8A898, #D4C8B8, #B8A898)",
+          flexShrink: 0,
+        }}
+      />
       {/* RIGHT PAGE — Index */}
       <div
         style={{
@@ -103,6 +116,7 @@ export default function Home() {
           display: "flex",
           flexDirection: "column",
           gap: "1.5rem",
+          boxShadow: "inset 8px 0 15px rgba(0,0,0,0.12)",
         }}
       >
         <h2
@@ -121,101 +135,108 @@ export default function Home() {
         <div
           style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}
         >
-          {/* Kizuna */}
-          <div style={{ cursor: "pointer" }}>
-            <p
-              style={{
-                fontSize: "0.95rem",
-                fontWeight: "600",
-                color: "#1A1612",
-                margin: 0,
-              }}
-            >
-              Kizuna
-            </p>
-            <p
-              style={{
-                fontSize: "0.75rem",
-                color: "#8A7A6A",
-                margin: "0.2rem 0 0",
-                letterSpacing: "0.05em",
-              }}
-            >
-              Logged: May 2026 · Resolved
-            </p>
-          </div>
+          <Link href="/entry/kizuna" style={{ textDecoration: "none" }}>
+            <div style={{ cursor: "pointer" }}>
+              <p
+                style={{
+                  fontSize: "0.95rem",
+                  fontWeight: "600",
+                  color: "#1A1612",
+                  margin: 0,
+                }}
+              >
+                Kizuna
+              </p>
+              <p
+                style={{
+                  fontSize: "0.75rem",
+                  color: "#8A7A6A",
+                  margin: "0.2rem 0 0",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                Logged: May 2026 · Resolved
+              </p>
+            </div>
+          </Link>
 
-          {/* Inventory Management System */}
-          <div style={{ cursor: "pointer" }}>
-            <p
-              style={{
-                fontSize: "0.95rem",
-                fontWeight: "600",
-                color: "#1A1612",
-                margin: 0,
-              }}
-            >
-              Inventory Management System
-            </p>
-            <p
-              style={{
-                fontSize: "0.75rem",
-                color: "#8A7A6A",
-                margin: "0.2rem 0 0",
-                letterSpacing: "0.05em",
-              }}
-            >
-              Logged: Apr 2024 · Resolved
-            </p>
-          </div>
+          <Link
+            href="/entry/inventory-management"
+            style={{ textDecoration: "none" }}
+          >
+            <div style={{ cursor: "pointer" }}>
+              <p
+                style={{
+                  fontSize: "0.95rem",
+                  fontWeight: "600",
+                  color: "#1A1612",
+                  margin: 0,
+                }}
+              >
+                Inventory Management System
+              </p>
+              <p
+                style={{
+                  fontSize: "0.75rem",
+                  color: "#8A7A6A",
+                  margin: "0.2rem 0 0",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                Logged: Apr 2024 · Resolved
+              </p>
+            </div>
+          </Link>
 
-          {/* Vobble */}
-          <div style={{ cursor: "pointer" }}>
-            <p
-              style={{
-                fontSize: "0.95rem",
-                fontWeight: "600",
-                color: "#1A1612",
-                margin: 0,
-              }}
-            >
-              Vobble
-            </p>
-            <p
-              style={{
-                fontSize: "0.75rem",
-                color: "#8A7A6A",
-                margin: "0.2rem 0 0",
-                letterSpacing: "0.05em",
-              }}
-            >
-              Logged: Feb 2026 · Resolved
-            </p>
-          </div>
+          <Link href="/entry/vobble" style={{ textDecoration: "none" }}>
+            <div style={{ cursor: "pointer" }}>
+              <p
+                style={{
+                  fontSize: "0.95rem",
+                  fontWeight: "600",
+                  color: "#1A1612",
+                  margin: 0,
+                }}
+              >
+                Vobble
+              </p>
+              <p
+                style={{
+                  fontSize: "0.75rem",
+                  color: "#8A7A6A",
+                  margin: "0.2rem 0 0",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                Logged: Feb 2026 · Resolved
+              </p>
+            </div>
+          </Link>
 
-          {/* Futloo AI */}
-          <div style={{ cursor: "pointer" }}>
-            <p
-              style={{
-                fontSize: "0.95rem",
-                fontWeight: "600",
-                color: "#1A1612",
-                margin: 0,
-              }}
-            >
-              Futloo AI
-            </p>
-            <p
-              style={{
-                fontSize: "0.75rem",
-                color: "#8A7A6A",
-                margin: "0.2rem 0 0",
-                letterSpacing: "0.05em",
-              }}
-            >
-              Logged: Apr 2025 · Ongoing
-            </p>
-          </div>
+          <Link href="/entry/futloo-ai" style={{ textDecoration: "none" }}>
+            <div style={{ cursor: "pointer" }}>
+              <p
+                style={{
+                  fontSize: "0.95rem",
+                  fontWeight: "600",
+                  color: "#1A1612",
+                  margin: 0,
+                }}
+              >
+                Futloo AI
+              </p>
+              <p
+                style={{
+                  fontSize: "0.75rem",
+                  color: "#8A7A6A",
+                  margin: "0.2rem 0 0",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                Logged: Apr 2025 · Resolved
+              </p>
+            </div>
+          </Link>
         </div>
       </div>
     </div>
