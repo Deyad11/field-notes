@@ -3,11 +3,17 @@ import { useRef, useEffect, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import LoadingOverlay from "./LoadingOverlay";
-
+function randomBetween(min: number, max: number) {
+  return Math.random() * (max - min) + min;
+}
 function SceneContents({ onLoaded }: { onLoaded: () => void }) {
   const lightRef = useRef<THREE.PointLight>(null);
   const intensityRef = useRef(0);
   const loadedRef = useRef(false);
+  const timeRef = useRef(0);
+  const nextFlickerRef = useRef(randomBetween(30, 90));
+  const flickerStateRef = useRef<"idle" | "dip" | "recover">("idle");
+  const flickerTimerRef = useRef(0);
 
   // TODO: replace timer with useProgress() from @react-three/drei once real
   // 3D models (desk, lamp, journal) are added in step 6 — useProgress needs
@@ -21,12 +27,48 @@ function SceneContents({ onLoaded }: { onLoaded: () => void }) {
   }, [onLoaded]);
 
   useFrame((_, delta) => {
+    if (!lightRef.current) return;
+
+    // fade in on load
     if (loadedRef.current && intensityRef.current < 8) {
       intensityRef.current = Math.min(intensityRef.current + delta * 5, 8);
-      if (lightRef.current) {
-        lightRef.current.intensity = intensityRef.current;
+    }
+
+    if (!loadedRef.current || intensityRef.current < 7.9) return;
+
+    // ambient micro-flicker — always on
+    const micro =
+      1 +
+      Math.sin(timeRef.current * 7.3) * 0.012 +
+      Math.sin(timeRef.current * 13.7) * 0.008;
+    timeRef.current += delta;
+
+    // rare sharp flicker
+    nextFlickerRef.current -= delta;
+    if (nextFlickerRef.current <= 0 && flickerStateRef.current === "idle") {
+      flickerStateRef.current = "dip";
+      flickerTimerRef.current = 0;
+      nextFlickerRef.current = randomBetween(30, 90);
+    }
+
+    let sharpMultiplier = 1;
+    if (flickerStateRef.current === "dip") {
+      flickerTimerRef.current += delta;
+      sharpMultiplier = Math.max(0.3, 1 - flickerTimerRef.current / 0.08);
+      if (flickerTimerRef.current >= 0.08) {
+        flickerStateRef.current = "recover";
+        flickerTimerRef.current = 0;
+      }
+    } else if (flickerStateRef.current === "recover") {
+      flickerTimerRef.current += delta;
+      sharpMultiplier = 0.3 + (flickerTimerRef.current / 0.15) * 0.7;
+      if (flickerTimerRef.current >= 0.15) {
+        flickerStateRef.current = "idle";
+        sharpMultiplier = 1;
       }
     }
+
+    lightRef.current.intensity = intensityRef.current * micro * sharpMultiplier;
   });
 
   return (
