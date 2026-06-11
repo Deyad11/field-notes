@@ -135,7 +135,36 @@ export default function Home() {
             Full-Stack Specialization · CGPA 9.25 · 2026
           </p>
         </div>
-
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}
+        >
+          <a
+            href="https://www.linkedin.com/in/deepanshu-yadav-b240a7127/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontSize: "0.78rem",
+              color: "#5C4F3A",
+              textDecoration: "none",
+              letterSpacing: "0.03em",
+            }}
+          >
+            View LinkedIn &#8594;
+          </a>
+          <a
+            href="https://github.com/Deyad11"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontSize: "0.78rem",
+              color: "#5C4F3A",
+              textDecoration: "none",
+              letterSpacing: "0.03em",
+            }}
+          >
+            View GitHub &#8594;
+          </a>
+        </div>
         {/* FIXED: Changed don't to don&apos;t to pass compiler rules */}
         <p
           style={{
