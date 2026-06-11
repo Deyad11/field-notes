@@ -19,7 +19,7 @@ export default function Home() {
         display: "flex",
         gap: "0",
         width: "min(900px, 95vw)",
-        height: "min(580px, 80vh)",
+        minHeight: "min(580px, 80vh)",
         boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
         opacity: journalOpen ? 1 : 0,
         transition: "opacity 1s ease 0.3s",

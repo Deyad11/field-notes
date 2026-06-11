@@ -31,7 +31,7 @@ export default function EntryPage({
       style={{
         display: "flex",
         width: "min(900px, 95vw)",
-        height: "min(580px, 80vh)",
+        minHeight: "min(580px, 80vh)",
         boxShadow: "0 8px 48px rgba(0,0,0,0.6)",
         opacity: journalOpen ? 1 : 0,
         transition: "opacity 1s ease 0.3s",
@@ -43,7 +43,7 @@ export default function EntryPage({
         style={{
           flex: 1,
           background: "#F2EFE9",
-          padding: "clamp(1.5rem, 4vw, 3rem) clamp(1.2rem, 3vw, 2.5rem)",
+          padding: "clamp(1.5rem, 4vw, 3rem) clamp(1.2rem, 3vw, 2.5rem) 5rem",
           borderRight: "none",
           boxShadow: "inset -8px 0 15px rgba(0,0,0,0.12)",
           display: "flex",
@@ -92,8 +92,6 @@ export default function EntryPage({
                 margin: "0.2rem 0 0",
                 letterSpacing: "0.08em",
                 fontFamily: "var(--font-handwritten)",
-
-                minHeight: "1em",
               }}
             >
               {revealedId}
@@ -105,7 +103,7 @@ export default function EntryPage({
           style={{
             border: "none",
             borderTop: "1px solid #C8B89A",
-            margin: "0",
+            margin: "-0.6rem 0 0",
           }}
         />
 
@@ -174,10 +172,10 @@ export default function EntryPage({
         style={{
           flex: 1,
           background: "#F2EFE9",
-          padding: "clamp(1.5rem, 4vw, 3rem) clamp(1.2rem, 3vw, 2.5rem)",
+          padding: "clamp(1.5rem, 4vw, 3rem) clamp(1.2rem, 3vw, 2.5rem) 5rem",
           display: "flex",
           flexDirection: "column",
-          gap: "1.5rem",
+          gap: "1rem",
           overflow: "hidden",
           boxShadow: "inset 8px 0 15px rgba(0,0,0,0.12)",
         }}
@@ -208,18 +206,22 @@ export default function EntryPage({
         </div>
 
         {entry.anomaly && revealedAnomaly && (
-          <p
-            style={{
-              fontFamily: "var(--font-handwritten)",
-              fontSize: "1rem",
-              color: "#5C4F3A",
-              lineHeight: "1.75",
-              margin: 0,
-              fontStyle: "italic",
-            }}
-          >
-            {revealedAnomaly}
-          </p>
+          <div>
+            {revealedAnomaly && (
+              <p
+                style={{
+                  fontSize: "1rem",
+                  color: "#5C4F3A",
+                  lineHeight: "1.75",
+                  margin: 0,
+                  fontStyle: "italic",
+                  fontFamily: "var(--font-handwritten)",
+                }}
+              >
+                {revealedAnomaly}
+              </p>
+            )}
+          </div>
         )}
         <div>
           <p

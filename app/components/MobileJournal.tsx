@@ -278,7 +278,7 @@ function EntryLeftPage({
               margin: "0.2rem 0 0",
               letterSpacing: "0.08em",
               fontFamily: "var(--font-handwritten)",
-              minHeight: "1em",
+              minHeight: "1.2em",
             }}
           >
             {revealedId}
@@ -344,19 +344,23 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
         </p>
       </div>
 
-      {entry.anomaly && revealedAnomaly && (
-        <p
-          style={{
-            fontFamily: "var(--font-handwritten)",
-            fontSize: "1rem",
-            color: C.inkMid,
-            lineHeight: "1.8",
-            margin: 0,
-            fontStyle: "italic",
-          }}
-        >
-          {revealedAnomaly}
-        </p>
+      {entry.anomaly && (
+        <div style={{ minHeight: "3.5rem" }}>
+          {revealedAnomaly && (
+            <p
+              style={{
+                fontSize: "1rem",
+                color: C.inkMid,
+                lineHeight: "1.8",
+                margin: 0,
+                fontStyle: "italic",
+                fontFamily: "var(--font-handwritten)",
+              }}
+            >
+              {revealedAnomaly}
+            </p>
+          )}
+        </div>
       )}
 
       <Divider />
@@ -596,7 +600,7 @@ export default function MobileJournal() {
           style={{
             flex: 1,
             overflowY: "auto",
-            padding: `${canGoBack ? "72px" : "1.5rem"} 1.6rem ${canGoForward ? "80px" : "2rem"}`,
+            padding: `${canGoBack ? "72px" : "1.5rem"} 1.6rem ${canGoForward ? "80px" : "4rem"}`,
             position: "relative",
           }}
         >
