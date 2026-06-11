@@ -140,12 +140,14 @@ export default function ClientLayout({
             zIndex: 11,
             color: "#8A7A6A",
             fontFamily: "monospace",
-            fontSize: "0.7rem",
-            letterSpacing: "0.1em",
+            fontSize: "0.78rem",
+            letterSpacing: "0.18em",
             cursor: "pointer",
+            opacity: 0.7,
+            animation: "pulsePrompt 2.5s ease-in-out infinite",
           }}
         >
-          ✕ close
+          close the journal...
         </div>
       )}
 
