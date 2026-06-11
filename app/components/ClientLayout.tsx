@@ -1,5 +1,4 @@
 "use client";
-// REMOVED: Unused 'useRef' import to fix the warning
 import { useState, useEffect } from "react";
 import Scene from "./Scene";
 import { SceneLoadedContext } from "./SceneContext";
@@ -10,12 +9,10 @@ function useReducedOrLowEnd(): boolean | null {
   const [shouldFallback, setShouldFallback] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // prefers-reduced-motion
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    // low-end device heuristic — hardware concurrency (CPU cores) and device memory
     const nav = navigator as Navigator & {
       deviceMemory?: number;
       hardwareConcurrency?: number;
@@ -26,7 +23,6 @@ function useReducedOrLowEnd(): boolean | null {
       typeof nav.hardwareConcurrency === "number" &&
       nav.hardwareConcurrency <= 2;
 
-    // FIXED: Added explicit exclusion rule for initial client-side device heuristic mapping
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setShouldFallback(reducedMotion || lowMemory || lowCPU);
   }, []);
@@ -37,7 +33,6 @@ function useReducedOrLowEnd(): boolean | null {
 function StaticFallback({ children }: { children: React.ReactNode }) {
   return (
     <>
-      {/* static desk image replacing the live canvas */}
       <div
         style={{
           position: "fixed",
@@ -49,7 +44,6 @@ function StaticFallback({ children }: { children: React.ReactNode }) {
           backgroundRepeat: "no-repeat",
         }}
       />
-      {/* journal is always visible — no lamp load sequence needed */}
       <SceneLoadedContext.Provider
         value={{
           loaded: true,
@@ -85,16 +79,12 @@ export default function ClientLayout({
   const isMobile = useMobile();
   const shouldFallback = useReducedOrLowEnd();
 
-  // Not yet measured
   if (isMobile === null || shouldFallback === null) return null;
 
-  // Mobile: steno-pad journal, no R3F
   if (isMobile) return <MobileJournal />;
 
-  // Low-end / reduced-motion: static image + journal always open
   if (shouldFallback) return <StaticFallback>{children}</StaticFallback>;
 
-  // Desktop full experience
   return (
     <SceneLoadedContext.Provider
       value={{ loaded, journalOpen, setJournalOpen }}
@@ -109,12 +99,47 @@ export default function ClientLayout({
             inset: 0,
             zIndex: 9,
             display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "flex-end",
             paddingBottom: "3rem",
             cursor: "pointer",
+            textAlign: "center",
           }}
         >
+          {/* Positioning copy — name, title, tagline.
+              Sits on the closed journal "cover" above the prompt,
+              away from the lamp's light pool. */}
+          <div style={{ marginBottom: "2.5rem" }}>
+            <p
+              style={{
+                color: "#C9BCA8",
+                fontFamily: "monospace",
+                fontSize: "0.78rem",
+                letterSpacing: "0.08em",
+                margin: 0,
+                opacity: 0.85,
+              }}
+            >
+              Deepanshu Yadav — Full-Stack &amp; Mobile Developer
+            </p>
+            <p
+              style={{
+                color: "#A89C8A",
+                fontFamily: "Crimson Pro, serif",
+                fontStyle: "italic",
+                fontWeight: 500,
+                fontSize: "1rem",
+                letterSpacing: "0.015em",
+                lineHeight: 1.5,
+                margin: "0.6rem 0 0",
+              }}
+            >
+              A working log of things built, broken, and occasionally
+              unexplained.
+            </p>
+          </div>
+
           <p
             style={{
               color: "#E8C99B",
