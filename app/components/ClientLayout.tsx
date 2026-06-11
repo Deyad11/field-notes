@@ -1,9 +1,76 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Scene from "./Scene";
 import { SceneLoadedContext } from "./SceneContext";
 import MobileJournal from "./MobileJournal";
 import { useMobile } from "../hooks/useMobile";
+
+function useReducedOrLowEnd(): boolean | null {
+  const [shouldFallback, setShouldFallback] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    // prefers-reduced-motion
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    // low-end device heuristic — hardware concurrency (CPU cores) and device memory
+    const nav = navigator as Navigator & {
+      deviceMemory?: number;
+      hardwareConcurrency?: number;
+    };
+    const lowMemory =
+      typeof nav.deviceMemory === "number" && nav.deviceMemory < 4;
+    const lowCPU =
+      typeof nav.hardwareConcurrency === "number" &&
+      nav.hardwareConcurrency <= 2;
+
+    setShouldFallback(reducedMotion || lowMemory || lowCPU);
+  }, []);
+
+  return shouldFallback;
+}
+
+function StaticFallback({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      {/* static desk image replacing the live canvas */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 0,
+          backgroundImage: "url('/desk-fallback.webp')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      />
+      {/* journal is always visible — no lamp load sequence needed */}
+      <SceneLoadedContext.Provider
+        value={{
+          loaded: true,
+          journalOpen: true,
+          setJournalOpen: () => {},
+        }}
+      >
+        <main
+          style={{
+            position: "relative",
+            zIndex: 10,
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "2rem",
+          }}
+        >
+          {children}
+        </main>
+      </SceneLoadedContext.Provider>
+    </>
+  );
+}
 
 export default function ClientLayout({
   children,
@@ -13,21 +80,24 @@ export default function ClientLayout({
   const [loaded, setLoaded] = useState(false);
   const [journalOpen, setJournalOpen] = useState(false);
   const isMobile = useMobile();
+  const shouldFallback = useReducedOrLowEnd();
 
-  // Not yet measured — render nothing to avoid flashing either experience
-  if (isMobile === null) return null;
+  // Not yet measured
+  if (isMobile === null || shouldFallback === null) return null;
 
-  // Mobile: self-contained steno-pad journal, no R3F
+  // Mobile: steno-pad journal, no R3F
   if (isMobile) return <MobileJournal />;
 
-  // Desktop: existing 3D scene + HTML journal overlay
+  // Low-end / reduced-motion: static image + journal always open
+  if (shouldFallback) return <StaticFallback>{children}</StaticFallback>;
+
+  // Desktop full experience
   return (
     <SceneLoadedContext.Provider
       value={{ loaded, journalOpen, setJournalOpen }}
     >
       <Scene onLoaded={() => setLoaded(true)} />
 
-      {/* open the journal prompt */}
       {loaded && !journalOpen && (
         <div
           onClick={() => setJournalOpen(true)}
