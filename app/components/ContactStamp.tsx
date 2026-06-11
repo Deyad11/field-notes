@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 
 export default function ContactStamp() {
   const [open, setOpen] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -18,6 +19,10 @@ export default function ContactStamp() {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
+
+  // Determine interactive color based on state
+  const activeAccentColor = isFocused ? "#C84B31" : "#5C4F3A";
+  const activeBorderColor = isFocused ? "#C84B31" : "#8A7A6A";
 
   return (
     <div
@@ -44,12 +49,17 @@ export default function ContactStamp() {
         >
           <a
             href="mailto:rockstardeepanshu11@gmail.com"
+            aria-label="Email rockstardeepanshu11@gmail.com"
             style={{
               fontSize: "0.8rem",
               color: "#2A2218",
               textDecoration: "none",
               letterSpacing: "0.03em",
+              borderRadius: "2px",
+              transition: "color 0.15s ease",
             }}
+            onFocus={(e) => (e.currentTarget.style.color = "#C84B31")}
+            onBlur={(e) => (e.currentTarget.style.color = "#2A2218")}
           >
             ✉ rockstardeepanshu11@gmail.com
           </a>
@@ -57,12 +67,17 @@ export default function ContactStamp() {
             href="https://wa.me/918851843305"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="WhatsApp +91 88518 43305"
             style={{
               fontSize: "0.8rem",
               color: "#2A2218",
               textDecoration: "none",
               letterSpacing: "0.03em",
+              borderRadius: "2px",
+              transition: "color 0.15s ease",
             }}
+            onFocus={(e) => (e.currentTarget.style.color = "#C84B31")}
+            onBlur={(e) => (e.currentTarget.style.color = "#2A2218")}
           >
             ✆ +91 88518 43305
           </a>
@@ -70,18 +85,35 @@ export default function ContactStamp() {
       )}
 
       <div
+        role="button"
+        tabIndex={0}
+        aria-expanded={open}
+        aria-label="Contact"
         onClick={() => setOpen(!open)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen(!open);
+          }
+          if (e.key === "Escape") {
+            setOpen(false);
+          }
+        }}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         style={{
           width: "64px",
           height: "64px",
           borderRadius: "50%",
-          border: "1.5px solid #8A7A6A",
+          border: `1.5px solid ${activeBorderColor}`,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           cursor: "pointer",
           position: "relative",
           background: "#F2EFE9",
+          outline: "none", // Removes the default blocky browser outline
+          transition: "border-color 0.15s ease",
         }}
       >
         <svg
@@ -89,6 +121,7 @@ export default function ContactStamp() {
           width="64"
           height="64"
           style={{ position: "absolute" }}
+          aria-hidden="true"
         >
           <path
             id="stampArc"
@@ -98,20 +131,23 @@ export default function ContactStamp() {
           <text
             style={{
               fontSize: "6.5px",
-              fill: "#5C4F3A",
+              fill: activeAccentColor,
               letterSpacing: "2.2px",
               fontFamily: "monospace",
+              transition: "fill 0.15s ease",
             }}
           >
             <textPath href="#stampArc">CONTACT · CONTACT ·</textPath>
           </text>
         </svg>
         <span
+          aria-hidden="true"
           style={{
             fontSize: "1rem",
-            color: "#5C4F3A",
+            color: activeAccentColor,
             fontFamily: "monospace",
             lineHeight: 1,
+            transition: "color 0.15s ease",
           }}
         >
           ✉
