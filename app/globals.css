@@ -150,3 +150,21 @@ a, button, [role="button"] {
   /* Running this slightly faster ensures it feels snappy behind the typewriter loop */
   animation: ink-seep 0.25s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
+/* --- Ultra-Visibility Vintage Violet Ink --- */
+.index-link:visited .entry-title {
+  color: #6D28D9 !important; /* Rich, vibrant royal violet ink — completely distinct from black */
+}
+
+.index-link:visited .entry-date {
+  color: #7C3AED !important; /* Matching clear purple accent for metadata */
+}
+
+/* Maintain active layout feedback rules during explicit user interactions */
+.index-link:visited:hover .entry-title {
+  color: #962D2D !important; /* Snaps back to red bleed on active hover */
+  filter: url(#ink-bleed);
+}
+
+.index-link:visited:hover .entry-date {
+  color: #C84B31 !important;
+}
