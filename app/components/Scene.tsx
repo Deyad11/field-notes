@@ -33,7 +33,8 @@ function Desk() {
   );
 }
 
-function Lamp() {
+// 1. ADDED A REF TO THE BULB: Passed down so useFrame can control its color directly
+function Lamp({ bulbRef }: { bulbRef: React.RefObject<THREE.Mesh | null> }) {
   return (
     <group position={[1.1, 0.08, -0.5]}>
       {/* base */}
@@ -51,15 +52,22 @@ function Lamp() {
         <cylinderGeometry args={[0.018, 0.018, 0.45, 8]} />
         <meshStandardMaterial color="#1A1A1A" roughness={0.7} metalness={0.4} />
       </mesh>
-      {/* shade */}
-      <mesh position={[-0.28, 0.88, 0]} rotation={[Math.PI, 0, 0]}>
-        <coneGeometry args={[0.18, 0.22, 16, 1, true]} />
+
+      {/* Shade */}
+      <mesh position={[-0.28, 0.88, 0]} rotation={[0.3, 0, 0.5]}>
+        <cylinderGeometry args={[0.05, 0.18, 0.22, 16, 1, true]} />
         <meshStandardMaterial
           color="#1C1C1C"
           roughness={0.8}
           metalness={0.3}
           side={THREE.DoubleSide}
         />
+      </mesh>
+
+      {/* BULB MESH: Initialized as pure pitch-black color */}
+      <mesh ref={bulbRef} position={[-0.3, 0.82, 0.06]}>
+        <sphereGeometry args={[0.06, 16, 16]} />
+        <meshBasicMaterial color="#000000" toneMapped={false} />
       </mesh>
     </group>
   );
@@ -108,7 +116,10 @@ function SceneContents({
   onLoaded: () => void;
   onJournalClick: () => void;
 }) {
-  const lightRef = useRef<THREE.PointLight>(null);
+  const lightRef = useRef<THREE.SpotLight>(null);
+  const bulbRef = useRef<THREE.Mesh>(null); // Added local ref for the bulb component
+  const [lightTarget, setLightTarget] = useState<THREE.Object3D | null>(null);
+
   const intensityRef = useRef(0);
   const loadedRef = useRef(false);
   const timeRef = useRef(0);
@@ -116,9 +127,6 @@ function SceneContents({
   const flickerStateRef = useRef<"idle" | "dip" | "recover">("idle");
   const flickerTimerRef = useRef(0);
 
-  // TODO: replace timer with useProgress() from @react-three/drei once real
-  // 3D models (desk, lamp, journal) are added in step 6 — useProgress needs
-  // actual asset files to track, placeholder geometry has nothing to load
   useEffect(() => {
     const t = setTimeout(() => {
       loadedRef.current = true;
@@ -130,59 +138,97 @@ function SceneContents({
   useFrame((_, delta) => {
     if (!lightRef.current) return;
 
-    if (loadedRef.current && intensityRef.current < 8) {
-      intensityRef.current = Math.min(intensityRef.current + delta * 5, 8);
+    if (lightTarget) {
+      lightRef.current.target = lightTarget;
     }
 
-    if (!loadedRef.current || intensityRef.current < 7.9) return;
-
-    const micro =
-      1 +
-      Math.sin(timeRef.current * 7.3) * 0.012 +
-      Math.sin(timeRef.current * 13.7) * 0.008;
-    timeRef.current += delta;
-
-    nextFlickerRef.current -= delta;
-    if (nextFlickerRef.current <= 0 && flickerStateRef.current === "idle") {
-      flickerStateRef.current = "dip";
-      flickerTimerRef.current = 0;
-      nextFlickerRef.current = randomBetween(30, 90);
+    // Smooth linear fade-in over the first few frames
+    if (loadedRef.current && intensityRef.current < 22) {
+      intensityRef.current = Math.min(intensityRef.current + delta * 12, 22);
     }
 
     let sharpMultiplier = 1;
-    if (flickerStateRef.current === "dip") {
-      flickerTimerRef.current += delta;
-      sharpMultiplier = Math.max(0.3, 1 - flickerTimerRef.current / 0.08);
-      if (flickerTimerRef.current >= 0.08) {
-        flickerStateRef.current = "recover";
+
+    // Apply micro flickering properties if fully loaded
+    if (loadedRef.current && intensityRef.current >= 21.9) {
+      const micro =
+        1 +
+        Math.sin(timeRef.current * 7.3) * 0.012 +
+        Math.sin(timeRef.current * 13.7) * 0.008;
+      timeRef.current += delta;
+
+      nextFlickerRef.current -= delta;
+      if (nextFlickerRef.current <= 0 && flickerStateRef.current === "idle") {
+        flickerStateRef.current = "dip";
         flickerTimerRef.current = 0;
+        nextFlickerRef.current = randomBetween(30, 90);
       }
-    } else if (flickerStateRef.current === "recover") {
-      flickerTimerRef.current += delta;
-      sharpMultiplier = 0.3 + (flickerTimerRef.current / 0.15) * 0.7;
-      if (flickerTimerRef.current >= 0.15) {
-        flickerStateRef.current = "idle";
-        sharpMultiplier = 1;
+
+      if (flickerStateRef.current === "dip") {
+        flickerTimerRef.current += delta;
+        sharpMultiplier = Math.max(0.3, 1 - flickerTimerRef.current / 0.08);
+        if (flickerTimerRef.current >= 0.08) {
+          flickerStateRef.current = "recover";
+          flickerTimerRef.current = 0;
+        }
+      } else if (flickerStateRef.current === "recover") {
+        flickerTimerRef.current += delta;
+        sharpMultiplier = 0.3 + (flickerTimerRef.current / 0.15) * 0.7;
+        if (flickerTimerRef.current >= 0.15) {
+          flickerStateRef.current = "idle";
+          sharpMultiplier = 1;
+        }
       }
+
+      lightRef.current.intensity =
+        intensityRef.current * micro * sharpMultiplier;
+    } else {
+      lightRef.current.intensity = intensityRef.current;
     }
 
-    lightRef.current.intensity = intensityRef.current * micro * sharpMultiplier;
+    // 2. DIRECT REF ANIMATION VALUE LOOP:
+    // This dynamically calculates and sets the color directly to the GPU without triggering state updates.
+    if (bulbRef.current) {
+      const material = bulbRef.current.material as THREE.MeshBasicMaterial;
+      const progressFactor = Math.min(lightRef.current.intensity / 22, 1);
+
+      // Interpolate the color dynamically from pure dark black to glowing hot white
+      material.color.setRGB(progressFactor, progressFactor, progressFactor);
+    }
   });
 
   return (
     <>
-      <ambientLight intensity={0.12} />
-      <pointLight
+      <ambientLight intensity={0.03} />
+      <directionalLight
+        position={[-2, 2, 2]}
+        intensity={0.15}
+        color="#8A9BA8"
+      />
+
+      {/* FIXED ALIGNED SPOTLIGHT */}
+      <spotLight
         ref={lightRef}
-        position={[0.82, 1.1, -0.5]}
+        position={[0.8, 0.9, -0.44]} // Synced perfectly with the math position of the bulb mesh
         intensity={0}
         color="#E8C99B"
-        distance={4}
-        decay={2}
+        distance={4.5}
+        angle={Math.PI / 5.5}
+        penumbra={0.4}
+        decay={1.8}
+        castShadow
       />
+
       <Desk />
-      <Lamp />
-      <ClosedJournal onClick={onJournalClick} />
+
+      {/* Pass the physical mesh ref link to the lamp */}
+      <Lamp bulbRef={bulbRef} />
+
+      <group position={[0.2, 0.06, 0.1]} ref={setLightTarget}>
+        <group position={[-0.2, 0, 0]}>
+          <ClosedJournal onClick={onJournalClick} />
+        </group>
+      </group>
     </>
   );
 }
