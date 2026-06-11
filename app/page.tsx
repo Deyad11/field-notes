@@ -145,7 +145,7 @@ export default function Home() {
             style={{
               fontSize: "0.78rem",
               color: "#5C4F3A",
-              textDecoration: "none",
+              textDecoration: "underline",
               letterSpacing: "0.03em",
             }}
           >
@@ -158,7 +158,7 @@ export default function Home() {
             style={{
               fontSize: "0.78rem",
               color: "#5C4F3A",
-              textDecoration: "none",
+              textDecoration: "underline",
               letterSpacing: "0.03em",
             }}
           >
@@ -262,6 +262,27 @@ export default function Home() {
           <Link href="/entry/inventory-management" className="index-link">
             <p className="entry-title">Inventory Management System</p>
             <p className="entry-date">Logged: Apr 2024 · Resolved</p>
+          </Link>
+
+          {/* FIXED: Added clean Writings subheader segment for case studies */}
+          <p
+            style={{
+              fontSize: "0.65rem",
+              fontWeight: "700",
+              color: "#8A7A6A",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              margin: "0.4rem 0 0",
+            }}
+          >
+            Writings
+          </p>
+
+          <Link href="/entry/product-case-studies" className="index-link">
+            <p className="entry-title">Product Case Studies</p>
+            <p className="entry-date">
+              Logged: Independent Deep Dives · Active
+            </p>
           </Link>
         </div>
       </div>

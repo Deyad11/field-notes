@@ -21,8 +21,8 @@ export default function ContactStamp() {
   }, [open]);
 
   // Determine interactive color based on state
-  const activeAccentColor = isFocused ? "#C84B31" : "#5C4F3A";
-  const activeBorderColor = isFocused ? "#C84B31" : "#8A7A6A";
+  const activeAccentColor = isFocused ? "#B33622" : "#5C4F3A";
+  const activeBorderColor = isFocused ? "#B33622" : "#8A7A6A";
 
   return (
     <div
@@ -58,7 +58,7 @@ export default function ContactStamp() {
               borderRadius: "2px",
               transition: "color 0.15s ease",
             }}
-            onFocus={(e) => (e.currentTarget.style.color = "#C84B31")}
+            onFocus={(e) => (e.currentTarget.style.color = "#B33622")}
             onBlur={(e) => (e.currentTarget.style.color = "#2A2218")}
           >
             ✉ rockstardeepanshu11@gmail.com
@@ -76,7 +76,7 @@ export default function ContactStamp() {
               borderRadius: "2px",
               transition: "color 0.15s ease",
             }}
-            onFocus={(e) => (e.currentTarget.style.color = "#C84B31")}
+            onFocus={(e) => (e.currentTarget.style.color = "#B33622")}
             onBlur={(e) => (e.currentTarget.style.color = "#2A2218")}
           >
             ✆ +91 88518 43305

@@ -125,7 +125,7 @@ export default function EntryPage({
           {entry.id && (
             <div
               style={{
-                color: "#C84B31", // Your brand red ink tone
+                color: "#B33622", // Your brand red ink tone
                 margin: "0.2rem 0 0",
                 letterSpacing: "0.08em",
                 fontFamily: "var(--font-handwritten)",
@@ -253,16 +253,25 @@ export default function EntryPage({
             <p
               style={{
                 fontSize: "1.05rem",
-                color: "#C84B31", // Red ink tone for anomalies
+                color: "#B33622", // Updated: Deepened contrast crimson red ink
                 lineHeight: "1.75",
                 margin: 0,
                 fontStyle: "italic",
                 fontFamily: "var(--font-handwritten)",
               }}
             >
-              {activeAnomaly.split("").map((char, index) => (
-                <span key={index} className="ink-reveal-char">
-                  {char}
+              {activeAnomaly.split(" ").map((word, wordIdx) => (
+                <span
+                  key={wordIdx}
+                  style={{ display: "inline-block", whiteSpace: "nowrap" }}
+                >
+                  {word.split("").map((char, charIdx) => (
+                    <span key={charIdx} className="ink-reveal-char">
+                      {char}
+                    </span>
+                  ))}
+                  {/* Re-inject clean space boundaries between words */}
+                  <span>&nbsp;</span>
                 </span>
               ))}
             </p>
@@ -307,52 +316,74 @@ export default function EntryPage({
               marginTop: "1rem",
             }}
           >
-            {entry.github && (
-              <a
-                href={entry.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontSize: "0.82rem",
-                  color: "#524633", // Elevated Contrast Pass
-                  textDecoration: "underline",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                View on GitHub →
-              </a>
-            )}
+            {/* FIXED: Dynamic mapping block for case studies or fallback repository targets */}
+            {entry.links ? (
+              entry.links.map((link) => (
+                <a
+                  key={link.url}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    fontSize: "0.82rem",
+                    color: "#524633",
+                    textDecoration: "underline",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  {link.label} →
+                </a>
+              ))
+            ) : (
+              <>
+                {entry.github && (
+                  <a
+                    href={entry.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      fontSize: "0.82rem",
+                      color: "#524633", // Elevated Contrast Pass
+                      textDecoration: "underline",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    View on GitHub →
+                  </a>
+                )}
 
-            {entry.appStore && (
-              <a
-                href={entry.appStore}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontSize: "0.82rem",
-                  color: "#524633", // Elevated Contrast Pass
-                  textDecoration: "underline",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                View on App Store →
-              </a>
-            )}
+                {entry.appStore && (
+                  <a
+                    href={entry.appStore}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      fontSize: "0.82rem",
+                      color: "#524633", // Elevated Contrast Pass
+                      textDecoration: "underline",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    View on App Store →
+                  </a>
+                )}
 
-            {entry.playStore && (
-              <a
-                href={entry.playStore}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontSize: "0.82rem",
-                  color: "#524633", // Elevated Contrast Pass
-                  textDecoration: "underline",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                View on Play Store →
-              </a>
+                {entry.playStore && (
+                  <a
+                    href={entry.playStore}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      fontSize: "0.82rem",
+                      color: "#524633", // Elevated Contrast Pass
+                      textDecoration: "underline",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    View on Play Store →
+                  </a>
+                )}
+              </>
             )}
           </div>
         </div>

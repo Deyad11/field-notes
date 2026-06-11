@@ -16,7 +16,7 @@ const C = {
   inkSubhead: "#6E6052", // Safe, rich tone for uppercase section headers
   inkFaint: "#C8B89A",
   inkFaintest: "#E0D8CC",
-  accent: "#C84B31",
+  accent: "#B33622",
   tagBg: "#E8E0D5",
   spiral: "#9A8A7A",
   bg: "#1C1A18",
@@ -452,20 +452,31 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
       </div>
 
       {entry.anomaly && revealedAnomaly && (
-        <div>
+        <div style={{ marginTop: "0.5rem" }}>
           <p
             style={{
               fontSize: "1.05rem",
-              color: C.accent, // Brand ink red for anomalies
+              color: C.accent, // Using theme token (set C.accent to "#B33622" in tokens for perfect contrast)
               lineHeight: "1.8",
               margin: 0,
               fontStyle: "italic",
               fontFamily: "var(--font-handwritten)",
             }}
           >
-            {revealedAnomaly.split("").map((char, index) => (
-              <span key={index} className="ink-reveal-char">
-                {char}
+            {revealedAnomaly.split(" ").map((word, wordIdx) => (
+              <span
+                key={wordIdx}
+                style={{ display: "inline-block", whiteSpace: "nowrap" }}
+              >
+                {word.split("").map((char, charIdx) => (
+                  <span key={charIdx} className="ink-reveal-char">
+                    {char}
+                  </span>
+                ))}
+                {/* Re-inject clean spacing boundaries between words natively */}
+                <span style={{ display: "inline-block", whiteSpace: "pre" }}>
+                  {" "}
+                </span>
               </span>
             ))}
           </p>
