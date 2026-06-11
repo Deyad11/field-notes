@@ -206,7 +206,7 @@ export default function Home() {
 
           <Link href="/entry/futloo-ai" className="index-link">
             <p className="entry-title">Futloo</p>
-            <p className="entry-date">Logged: Apr 2025 · Ongoing</p>
+            <p className="entry-date">Logged: Apr 2025 · Resolved</p>
           </Link>
         </div>
       </div>

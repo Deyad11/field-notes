@@ -36,10 +36,12 @@ export default function EntryPage({
         opacity: journalOpen ? 1 : 0,
         transition: "opacity 1s ease 0.3s",
         position: "relative" as const,
+        transform: "rotate(-1deg)",
       }}
     >
       {/* LEFT PAGE — nav + title + observation + approach */}
       <div
+        className="paper-noise paper-page paper-vignette"
         style={{
           flex: 1,
           background: "#F2EFE9",
@@ -169,6 +171,7 @@ export default function EntryPage({
 
       {/* RIGHT PAGE — findings + anomaly + tech + links */}
       <div
+        className="paper-noise paper-page paper-vignette-right"
         style={{
           flex: 1,
           background: "#F2EFE9",

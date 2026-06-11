@@ -69,3 +69,48 @@ body {
   0%, 100% { opacity: 0.4; }
   50% { opacity: 0.85; }
 }
+/* ── PAPER TEXTURE SYSTEM ───────────────────────────────────────────────── */
+
+/* 1. SVG noise filter definition — injected once, referenced by class */
+.paper-noise {
+  position: relative;
+}
+
+.paper-noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.04;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  mix-blend-mode: multiply;
+}
+
+/* 2. Page gradient — warm center, cooler edges */
+.paper-page {
+  background: radial-gradient(
+    ellipse at 50% 30%,
+    #F7F3EC 0%,
+    #F2EFE9 45%,
+    #EAE4DA 100%
+  ) !important;
+}
+
+/* 3. Deeper edge vignette via box-shadow */
+.paper-vignette {
+  box-shadow:
+    inset -14px 0 28px rgba(0,0,0,0.15),
+    inset 0 -16px 28px rgba(0,0,0,0.10),
+    inset 0 16px 28px rgba(0,0,0,0.07) !important;
+}
+
+.paper-vignette-right {
+  box-shadow:
+    inset 14px 0 28px rgba(0,0,0,0.15),
+    inset 0 -16px 28px rgba(0,0,0,0.10),
+    inset 0 16px 28px rgba(0,0,0,0.07) !important;
+}

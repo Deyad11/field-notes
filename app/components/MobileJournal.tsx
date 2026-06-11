@@ -232,7 +232,10 @@ function EntryLeftPage({
   if (!entry) return null;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
+    <div
+      className="paper-noise paper-page paper-vignette"
+      style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}
+    >
       <button
         onClick={onBackToIndex}
         style={{
@@ -328,7 +331,10 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
   if (!entry) return null;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
+    <div
+      className="paper-noise paper-page paper-vignette-right"
+      style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}
+    >
       <div>
         <Label>Findings</Label>
         <p
@@ -516,6 +522,7 @@ export default function MobileJournal() {
         alignItems: "flex-start",
         justifyContent: "center",
         overflowY: "auto",
+        transform: "rotate(-1deg)",
       }}
     >
       <div
