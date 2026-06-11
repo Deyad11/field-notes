@@ -54,3 +54,14 @@ body {
   0%, 100% { opacity: 0.4; }
   50% { opacity: 0.85; }
 }
+body {
+  background: transparent;
+  color: var(--foreground);
+  font-family: 'Crimson Pro', Georgia, serif;
+}
+
+:root {
+  --font-body: 'Crimson Pro', Georgia, serif;
+  --font-handwritten: 'Caveat', cursive;
+  --font-ui: monospace;
+}

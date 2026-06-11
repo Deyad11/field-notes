@@ -270,11 +270,12 @@ function EntryLeftPage({
         {entry.id && (
           <p
             style={{
-              fontSize: "0.68rem",
+              fontSize: "1rem",
               color: C.inkLight,
               margin: "0.2rem 0 0",
               letterSpacing: "0.08em",
-              fontFamily: "monospace",
+              fontFamily: "var(--font-handwritten)",
+
               minHeight: "1em",
             }}
           >
@@ -339,7 +340,8 @@ function EntryRightPage({ slug }: { slug: string }) {
       {entry.anomaly && revealedAnomaly && (
         <p
           style={{
-            fontSize: "0.82rem",
+            fontFamily: "var(--font-handwritten)",
+            fontSize: "1rem",
             color: C.inkMid,
             lineHeight: "1.8",
             margin: 0,

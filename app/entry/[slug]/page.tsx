@@ -88,11 +88,11 @@ export default function EntryPage({
           {entry.id && (
             <p
               style={{
-                fontSize: "0.68rem",
                 color: "#8A7A6A",
                 margin: "0.2rem 0 0",
                 letterSpacing: "0.08em",
-                fontFamily: "monospace",
+                fontFamily: "var(--font-handwritten)",
+
                 minHeight: "1em",
               }}
             >
@@ -210,7 +210,8 @@ export default function EntryPage({
         {entry.anomaly && revealedAnomaly && (
           <p
             style={{
-              fontSize: "0.8rem",
+              fontFamily: "var(--font-handwritten)",
+              fontSize: "1rem",
               color: "#5C4F3A",
               lineHeight: "1.75",
               margin: 0,
