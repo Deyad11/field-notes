@@ -85,7 +85,7 @@ export default function EntryPage({
 }) {
   const { slug } = use(params);
   const entry = entries[slug];
-  const loaded = useSceneLoaded();
+  const { journalOpen } = useSceneLoaded();
 
   if (!entry) {
     return (
@@ -105,7 +105,7 @@ export default function EntryPage({
         width: "min(900px, 95vw)",
         height: "min(580px, 80vh)",
         boxShadow: "0 8px 48px rgba(0,0,0,0.6)",
-        opacity: loaded ? 1 : 0,
+        opacity: journalOpen ? 1 : 0,
         transition: "opacity 1s ease 0.3s",
         position: "relative" as const,
       }}

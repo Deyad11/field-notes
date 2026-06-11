@@ -50,3 +50,7 @@ body {
 .index-link:hover .entry-date {
   color: #C84B31;
 }
+@keyframes pulsePrompt {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.85; }
+}

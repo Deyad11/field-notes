@@ -11,7 +11,7 @@ import Link from "next/link";
 // then gate the journal opacity on `journalOpen` instead of `loaded`
 
 export default function Home() {
-  const loaded = useSceneLoaded();
+  const { journalOpen } = useSceneLoaded();
   return (
     <div
       style={{
@@ -21,7 +21,7 @@ export default function Home() {
         height: "min(580px, 80vh)",
         borderRight: "none",
         boxShadow: "inset -8px 0 15px rgba(0,0,0,0.12)",
-        opacity: loaded ? 1 : 0,
+        opacity: journalOpen ? 1 : 0,
         transition: "opacity 1s ease 0.3s",
         borderRadius: "2px 4px 4px 2px",
         position: "relative" as const,
