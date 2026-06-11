@@ -1,4 +1,5 @@
 "use client";
+import ContactStamp from "./components/ContactStamp";
 import { useSceneLoaded } from "./components/SceneContext";
 import Link from "next/link";
 
@@ -23,6 +24,7 @@ export default function Home() {
         opacity: loaded ? 1 : 0,
         transition: "opacity 1s ease 0.3s",
         borderRadius: "2px 4px 4px 2px",
+        position: "relative" as const,
       }}
     >
       {/* LEFT PAGE — About */}
@@ -156,6 +158,7 @@ export default function Home() {
           </Link>
         </div>
       </div>
+      <ContactStamp />
     </div>
   );
 }

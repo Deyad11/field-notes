@@ -2,6 +2,7 @@
 import { use } from "react";
 import Link from "next/link";
 import { useSceneLoaded } from "../../components/SceneContext";
+import ContactStamp from "@/app/components/ContactStamp";
 
 const entries: Record<
   string,
@@ -106,6 +107,7 @@ export default function EntryPage({
         boxShadow: "0 8px 48px rgba(0,0,0,0.6)",
         opacity: loaded ? 1 : 0,
         transition: "opacity 1s ease 0.3s",
+        position: "relative" as const,
       }}
     >
       {/* LEFT PAGE — nav + title + observation + approach */}
@@ -323,6 +325,7 @@ export default function EntryPage({
           )}
         </div>
       </div>
+      <ContactStamp />
     </div>
   );
 }
