@@ -189,6 +189,42 @@ export default function Home() {
         <div
           style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}
         >
+          <p
+            style={{
+              fontSize: "0.65rem",
+              fontWeight: "700",
+              color: "#8A7A6A",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              margin: 0,
+            }}
+          >
+            Experience
+          </p>
+
+          <Link href="/entry/vobble" className="index-link">
+            <p className="entry-title">Vobble</p>
+            <p className="entry-date">Logged: Feb – Apr 2026 · Resolved</p>
+          </Link>
+
+          <Link href="/entry/futloo-ai" className="index-link">
+            <p className="entry-title">Futloo AI</p>
+            <p className="entry-date">Logged: Apr – Sep 2025 · Resolved</p>
+          </Link>
+
+          <p
+            style={{
+              fontSize: "0.65rem",
+              fontWeight: "700",
+              color: "#8A7A6A",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              margin: "0.4rem 0 0",
+            }}
+          >
+            Projects
+          </p>
+
           <Link href="/entry/kizuna" className="index-link">
             <p className="entry-title">Kizuna</p>
             <p className="entry-date">Logged: May 2026 · Resolved</p>
@@ -197,16 +233,6 @@ export default function Home() {
           <Link href="/entry/inventory-management" className="index-link">
             <p className="entry-title">Inventory Management System</p>
             <p className="entry-date">Logged: Apr 2024 · Resolved</p>
-          </Link>
-
-          <Link href="/entry/vobble" className="index-link">
-            <p className="entry-title">Vobble</p>
-            <p className="entry-date">Logged: Feb 2026 · Resolved</p>
-          </Link>
-
-          <Link href="/entry/futloo-ai" className="index-link">
-            <p className="entry-title">Futloo</p>
-            <p className="entry-date">Logged: Apr 2025 · Resolved</p>
           </Link>
         </div>
       </div>

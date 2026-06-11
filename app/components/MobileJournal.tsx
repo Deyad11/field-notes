@@ -189,29 +189,96 @@ function IndexPage({ onOpenEntry }: { onOpenEntry: (slug: string) => void }) {
         Index
       </h2>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
-        {entryOrder.map((slug) => {
-          const e = entries[slug];
-          return (
-            <button
-              key={slug}
-              onClick={() => onOpenEntry(slug)}
-              style={{
-                background: "none",
-                border: "none",
-                padding: 0,
-                textAlign: "left",
-                cursor: "pointer",
-              }}
-              className="index-link"
-            >
-              <p className="entry-title">{e.title}</p>
-              <p className="entry-date">
-                Logged: {e.logged} · {e.status}
-              </p>
-            </button>
-          );
-        })}
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
+        <p
+          style={{
+            fontSize: "0.65rem",
+            fontWeight: "700",
+            color: C.inkLight,
+            letterSpacing: "0.2em",
+            textTransform: "uppercase" as const,
+            margin: 0,
+          }}
+        >
+          Experience
+        </p>
+
+        <button
+          key="vobble"
+          onClick={() => onOpenEntry("vobble")}
+          style={{
+            background: "none",
+            border: "none",
+            padding: 0,
+            textAlign: "left",
+            cursor: "pointer",
+          }}
+          className="index-link"
+        >
+          <p className="entry-title">Vobble</p>
+          <p className="entry-date">Logged: Feb – Apr 2026 · Resolved</p>
+        </button>
+
+        <button
+          key="futloo-ai"
+          onClick={() => onOpenEntry("futloo-ai")}
+          style={{
+            background: "none",
+            border: "none",
+            padding: 0,
+            textAlign: "left",
+            cursor: "pointer",
+          }}
+          className="index-link"
+        >
+          <p className="entry-title">Futloo AI</p>
+          <p className="entry-date">Logged: Apr – Sep 2025 · Resolved</p>
+        </button>
+
+        <p
+          style={{
+            fontSize: "0.65rem",
+            fontWeight: "700",
+            color: C.inkLight,
+            letterSpacing: "0.2em",
+            textTransform: "uppercase" as const,
+            margin: "0.4rem 0 0",
+          }}
+        >
+          Projects
+        </p>
+
+        <button
+          key="kizuna"
+          onClick={() => onOpenEntry("kizuna")}
+          style={{
+            background: "none",
+            border: "none",
+            padding: 0,
+            textAlign: "left",
+            cursor: "pointer",
+          }}
+          className="index-link"
+        >
+          <p className="entry-title">Kizuna</p>
+          <p className="entry-date">Logged: May 2026 · Resolved</p>
+        </button>
+
+        <button
+          key="inventory-management"
+          onClick={() => onOpenEntry("inventory-management")}
+          style={{
+            background: "none",
+            border: "none",
+            padding: 0,
+            textAlign: "left",
+            cursor: "pointer",
+          }}
+          className="index-link"
+        >
+          <p className="entry-title">Inventory Management System</p>
+          <p className="entry-date">Logged: Apr 2024 · Resolved</p>
+        </button>
       </div>
     </div>
   );
@@ -522,7 +589,6 @@ export default function MobileJournal() {
         alignItems: "flex-start",
         justifyContent: "center",
         overflowY: "auto",
-        transform: "rotate(-1deg)",
       }}
     >
       <div
