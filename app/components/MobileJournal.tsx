@@ -22,7 +22,6 @@ const C = {
   bg: "#1C1A18",
   visitedInk: "#581C87",
   visitedInkLight: "#7C3AED",
-  // UPGRADED TOKEN: Weathered Graphite Pencil Lead for clean, independent visibility
   pencilLead: "#78716C",
 };
 
@@ -405,6 +404,58 @@ function IndexPage({
             Logged: Apr 2024 · Resolved
           </p>
         </button>
+
+        <p
+          style={{
+            fontSize: "0.65rem",
+            fontWeight: "700",
+            color: C.inkSubhead,
+            letterSpacing: "0.2em",
+            textTransform: "uppercase" as const,
+            margin: "0.4rem 0 0",
+          }}
+        >
+          Writings
+        </p>
+
+        <button
+          onClick={() => onOpenEntry("product-case-studies")}
+          style={{
+            background: "none",
+            border: "none",
+            padding: 0,
+            textAlign: "left",
+            cursor: "pointer",
+          }}
+          className="index-link"
+        >
+          <p
+            className="entry-title"
+            style={{
+              fontSize: "0.95rem",
+              fontWeight: 600,
+              margin: 0,
+              color: visitedSlugs.includes("product-case-studies")
+                ? C.visitedInk
+                : C.ink,
+            }}
+          >
+            Product Case Studies
+          </p>
+          <p
+            className="entry-date"
+            style={{
+              fontSize: "0.75rem",
+              margin: "0.2rem 0 0",
+              letterSpacing: "0.05em",
+              color: visitedSlugs.includes("product-case-studies")
+                ? C.visitedInkLight
+                : C.inkLight,
+            }}
+          >
+            Logged: Independent Deep Dives · Active
+          </p>
+        </button>
       </div>
     </div>
   );
@@ -616,6 +667,7 @@ function EntryRightPage({
           ))}
         </div>
 
+        {/* STATIC APPMIN LINK REDIRECTS */}
         {entry.github && (
           <a
             href={entry.github}
@@ -667,6 +719,29 @@ function EntryRightPage({
             View on Play Store →
           </a>
         )}
+
+        {/* FIXED: Dynamic array compilation loops mapping multi-links cleanly */}
+        {entry.links &&
+          entry.links.map((link, idx) => (
+            <a
+              key={idx}
+              href={link.url}
+              target={link.url === "#" ? undefined : "_blank"}
+              rel="noopener noreferrer"
+              style={{
+                display: "block",
+                marginTop: "0.5rem",
+                fontSize: "0.82rem",
+                textDecoration: "underline",
+                letterSpacing: "0.05em",
+                // Stylistic distinction for unlinked static anomalies like Ø-3A
+                color: link.url === "#" ? C.pencilLead : C.inkMid,
+                cursor: link.url === "#" ? "default" : "pointer",
+              }}
+            >
+              {link.label} →
+            </a>
+          ))}
       </div>
     </div>
   );
@@ -829,7 +904,7 @@ export default function MobileJournal() {
           </span>
         </div>
 
-        {/* ── TAP ZONE: PREVIOUS (UPGRADED TO GRAPHITE PENCIL) ── */}
+        {/* ── TAP ZONE: PREVIOUS ── */}
         {canGoBack && (
           <button
             onClick={goBack}
@@ -853,7 +928,7 @@ export default function MobileJournal() {
               className="pulse-text-mobile"
               style={{
                 fontSize: "0.76rem",
-                color: C.pencilLead, // Pure graphite pencil shade
+                color: C.pencilLead,
                 letterSpacing: "0.18em",
                 fontFamily: "monospace",
                 fontWeight: 600,
@@ -926,7 +1001,7 @@ export default function MobileJournal() {
           </div>
         </div>
 
-        {/* ── TAP ZONE: NEXT (UPGRADED TO GRAPHITE PENCIL) ── */}
+        {/* ── TAP ZONE: NEXT ── */}
         {canGoForward && (
           <button
             onClick={goForward}
@@ -952,7 +1027,7 @@ export default function MobileJournal() {
               className="pulse-text-mobile"
               style={{
                 fontSize: "0.76rem",
-                color: C.pencilLead, // Pure graphite pencil shade
+                color: C.pencilLead,
                 letterSpacing: "0.18em",
                 fontFamily: "monospace",
                 fontWeight: 600,
