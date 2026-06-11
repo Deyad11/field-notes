@@ -85,7 +85,17 @@ export default function EntryPage({
             Logged: {entry.logged} · {entry.status}
           </p>
         </div>
-
+        <p
+          style={{
+            fontSize: "0.7rem",
+            color: "#8A7A6A",
+            margin: "0.2rem 0 0",
+            letterSpacing: "0.08em",
+            fontFamily: "monospace",
+          }}
+        >
+          {entry.id}
+        </p>
         <hr
           style={{
             border: "none",
@@ -144,6 +154,7 @@ export default function EntryPage({
           </p>
         </div>
       </div>
+
       {/* spine */}
       <div
         style={{
@@ -152,7 +163,8 @@ export default function EntryPage({
           flexShrink: 0,
         }}
       />
-      {/* RIGHT PAGE — findings + anomaly + tech + github */}
+
+      {/* RIGHT PAGE — findings + anomaly + tech + links */}
       <div
         style={{
           flex: 1,
@@ -233,23 +245,64 @@ export default function EntryPage({
               </span>
             ))}
           </div>
-          {entry.github && (
-            <a
-              href={entry.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "block",
-                marginTop: "0.8rem",
-                fontSize: "0.82rem",
-                color: "#5C4F3A",
-                textDecoration: "none",
-                letterSpacing: "0.05em",
-              }}
-            >
-              GitHub →
-            </a>
-          )}
+
+          {/* Links Section */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.5rem",
+              marginTop: "1rem",
+            }}
+          >
+            {entry.github && (
+              <a
+                href={entry.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontSize: "0.82rem",
+                  color: "#5C4F3A",
+                  textDecoration: "none",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                View on GitHub →
+              </a>
+            )}
+
+            {entry.appStore && (
+              <a
+                href={entry.appStore}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontSize: "0.82rem",
+                  color: "#5C4F3A",
+                  textDecoration: "none",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                View on App Store →
+              </a>
+            )}
+
+            {entry.playStore && (
+              <a
+                href={entry.playStore}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontSize: "0.82rem",
+                  color: "#5C4F3A",
+                  textDecoration: "none",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                View on Play Store →
+              </a>
+            )}
+          </div>
         </div>
       </div>
       <ContactStamp />

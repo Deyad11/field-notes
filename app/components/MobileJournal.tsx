@@ -89,6 +89,8 @@ function Divider() {
 }
 
 // ── Page content components ────────────────────────────────────────────────
+// In MobileJournal.tsx — replace the entire AboutPage function with this:
+
 function AboutPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
@@ -111,7 +113,7 @@ function AboutPage() {
             letterSpacing: "0.05em",
           }}
         >
-          Full-Stack Developer
+          Full-Stack & Mobile Developer
         </p>
       </div>
 
@@ -130,19 +132,42 @@ function AboutPage() {
       </p>
 
       <div style={{ fontSize: "0.82rem", color: C.inkMid, lineHeight: "1.7" }}>
+        <p style={{ margin: 0, fontWeight: "600", color: C.ink }}>Vobble</p>
+        <p style={{ margin: 0 }}>React Native Developer · Feb – Apr 2026</p>
+        <p style={{ margin: "0.6rem 0 0", fontWeight: "600", color: C.ink }}>
+          Futloo AI
+        </p>
+        <p style={{ margin: 0 }}>Android Developer · Apr – Sep 2025</p>
+      </div>
+
+      <Divider />
+
+      <div style={{ fontSize: "0.78rem", color: C.inkMid, lineHeight: "1.7" }}>
+        <p style={{ margin: "0 0 0.3rem" }}>
+          React Native · React.js · Next.js · Node.js
+        </p>
+        <p style={{ margin: 0 }}>Java · Spring Boot · MySQL · Supabase</p>
+      </div>
+
+      <Divider />
+
+      <div style={{ fontSize: "0.82rem", color: C.inkMid, lineHeight: "1.6" }}>
         <p style={{ margin: 0 }}>B.Tech CSE — NorthCap University</p>
-        <p style={{ margin: 0 }}>Full-Stack Specialization</p>
+        <p style={{ margin: 0 }}>
+          Full-Stack Specialization · CGPA 9.25 · 2026
+        </p>
       </div>
 
       <p
         style={{
-          fontSize: "0.88rem",
-          color: "#2A2218",
-          lineHeight: "1.8",
-          margin: 0,
+          fontSize: "0.82rem",
+          color: C.inkLight,
+          lineHeight: "1.75",
+          margin: "1rem 0 0",
+          fontStyle: "italic",
         }}
       >
-        I read too many web novels. Some of them, I think, read back.
+        Last edited at a time I don't remember.
       </p>
     </div>
   );
@@ -343,7 +368,41 @@ function EntryRightPage({ slug }: { slug: string }) {
               letterSpacing: "0.05em",
             }}
           >
-            GitHub →
+            View on GitHub →
+          </a>
+        )}
+        {entry.appStore && (
+          <a
+            href={entry.appStore}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "block",
+              marginTop: "0.5rem",
+              fontSize: "0.82rem",
+              color: C.inkMid,
+              textDecoration: "none",
+              letterSpacing: "0.05em",
+            }}
+          >
+            App Store →
+          </a>
+        )}
+        {entry.playStore && (
+          <a
+            href={entry.playStore}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "block",
+              marginTop: "0.5rem",
+              fontSize: "0.82rem",
+              color: C.inkMid,
+              textDecoration: "none",
+              letterSpacing: "0.05em",
+            }}
+          >
+            Play Store →
           </a>
         )}
       </div>
