@@ -62,6 +62,7 @@ function SpiralWire() {
     </div>
   );
 }
+
 // ── Section label ──────────────────────────────────────────────────────────
 function Label({ children }: { children: React.ReactNode }) {
   return (
@@ -757,11 +758,11 @@ export default function MobileJournal() {
   const [visitedSlugs, setVisitedSlugs] = useState<string[]>([]);
   const [isMobile, setIsMobile] = useState(false);
 
-  // ── DRAG Y-AXIS STATES FOR STAMP PLAYABILITY ──
-  const [stampY, setStampY] = useState(0);
+  // ── FIX 1: OMNIDIRECTIONAL DUAL-AXIS DRAG POSITION TRACKING ──
+  const [stampPos, setStampPos] = useState({ x: 0, y: 0 });
   const isDragging = useRef(false);
-  const startY = useRef(0);
-  const initialStampY = useRef(0);
+  const startPointer = useRef({ x: 0, y: 0 });
+  const initialStampPos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -859,17 +860,21 @@ export default function MobileJournal() {
   const slideOut = direction === "forward" ? "-60px" : "60px";
   const slideIn = direction === "forward" ? "60px" : "-60px";
 
-  // ── DRAG EVENT LOGIC ──
-  const handleDragStart = (clientY: number) => {
+  // ── DUAL-AXIS POINTER EVENTS ──
+  const handleDragStart = (clientX: number, clientY: number) => {
     isDragging.current = true;
-    startY.current = clientY;
-    initialStampY.current = stampY;
+    startPointer.current = { x: clientX, y: clientY };
+    initialStampPos.current = { ...stampPos };
   };
 
-  const handleDragMove = (clientY: number) => {
+  const handleDragMove = (clientX: number, clientY: number) => {
     if (!isDragging.current) return;
-    const deltaY = clientY - startY.current;
-    setStampY(initialStampY.current + deltaY);
+    const deltaX = clientX - startPointer.current.x;
+    const deltaY = clientY - startPointer.current.y;
+    setStampPos({
+      x: initialStampPos.current.x + deltaX,
+      y: initialStampPos.current.y + deltaY,
+    });
   };
 
   const handleDragEnd = () => {
@@ -877,9 +882,12 @@ export default function MobileJournal() {
   };
 
   useEffect(() => {
-    const onGlobalMove = (e: MouseEvent) => handleDragMove(e.clientY);
+    const onGlobalMove = (e: MouseEvent) =>
+      handleDragMove(e.clientX, e.clientY);
     const onGlobalTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 0) handleDragMove(e.touches[0].clientY);
+      if (e.touches.length > 0) {
+        handleDragMove(e.touches[0].clientX, e.touches[0].clientY);
+      }
     };
     const onGlobalEnd = () => handleDragEnd();
 
@@ -894,7 +902,7 @@ export default function MobileJournal() {
       window.removeEventListener("touchmove", onGlobalTouchMove);
       window.removeEventListener("touchend", onGlobalEnd);
     };
-  }, [stampY]);
+  }, [stampPos]);
 
   return (
     <div
@@ -932,6 +940,7 @@ export default function MobileJournal() {
         >
           <SpiralWire />
         </div>
+
         {/* ── TAP ZONE: PREVIOUS ── */}
         {canGoBack && (
           <button
@@ -967,6 +976,7 @@ export default function MobileJournal() {
             </span>
           </button>
         )}
+
         {/* ── PAGE CONTENT CONTAINER ── */}
         <div
           ref={contentRef}
@@ -1030,16 +1040,17 @@ export default function MobileJournal() {
             )}
           </div>
         </div>
-        {/* ── RIGHTMOST PAGE INDICATOR ──
-        <div
+
+        {/* ── FIX 2: RIGHTMOST HEADER-LEVEL PAGE INDICATOR ── */}
+        {/* <div
           style={{
             position: "absolute",
-            top: "54px", // Sits cleanly at the top-right corner level
-            right: "1rem", // Pushed all the way to the right edge lane
+            top: "54px",
+            right: "1rem",
             fontSize: "0.65rem",
             color: C.inkLight,
             fontFamily: "monospace",
-            letterSpacing: "0.22em", // Generous letter spacing
+            letterSpacing: "0.22em",
             zIndex: 25,
             pointerEvents: "none",
             wordSpacing: "0.4rem",
@@ -1047,6 +1058,7 @@ export default function MobileJournal() {
         >
           PAGE {pageIndex + 1} / {totalPages}
         </div> */}
+
         {/* ── TAP ZONE: NEXT ── */}
         {canGoForward && (
           <button
@@ -1084,22 +1096,27 @@ export default function MobileJournal() {
             </span>
           </button>
         )}
-        {/* ── PLAYABLE / DRAGGABLE STAMP CONTAINER ── */}
+
+        {/* ── PLAYABLE OMNIDIRECTIONAL DRAGGABLE STAMP CONTAINER ── */}
         <div
-          onMouseDown={(e) => handleDragStart(e.clientY)}
+          onMouseDown={(e) => handleDragStart(e.clientX, e.clientY)}
           onTouchStart={(e) => {
-            if (e.touches.length > 0) handleDragStart(e.touches[0].clientY);
+            if (e.touches.length > 0) {
+              handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
+            }
           }}
           style={{
             position: "absolute",
-            zIndex: 30,
+            zIndex: 100,
             bottom: canGoForward ? "4.5rem" : "1.5rem",
             right: "1.5rem",
-            transform: `translateY(${stampY}px)`,
-            cursor: "grab",
+            // Upgraded to full 2D hardware matrix translation via translate3d
+            transform: `translate3d(${stampPos.x}px, ${stampPos.y}px, 0)`,
+            cursor: isDragging.current ? "grabbing" : "grab",
             transition: isDragging.current
               ? "none"
-              : "transform 0.15s ease-out",
+              : "transform 0.12s ease-out",
+            touchAction: "none",
           }}
           className="draggable-stamp-wrapper"
         >
