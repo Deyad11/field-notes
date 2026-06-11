@@ -135,107 +135,24 @@ export default function Home() {
         <div
           style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}
         >
-          <Link href="/entry/kizuna" style={{ textDecoration: "none" }}>
-            <div style={{ cursor: "pointer" }}>
-              <p
-                style={{
-                  fontSize: "0.95rem",
-                  fontWeight: "600",
-                  color: "#1A1612",
-                  margin: 0,
-                }}
-              >
-                Kizuna
-              </p>
-              <p
-                style={{
-                  fontSize: "0.75rem",
-                  color: "#8A7A6A",
-                  margin: "0.2rem 0 0",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                Logged: May 2026 · Resolved
-              </p>
-            </div>
+          <Link href="/entry/kizuna" className="index-link">
+            <p className="entry-title">Kizuna</p>
+            <p className="entry-date">Logged: May 2026 · Resolved</p>
           </Link>
 
-          <Link
-            href="/entry/inventory-management"
-            style={{ textDecoration: "none" }}
-          >
-            <div style={{ cursor: "pointer" }}>
-              <p
-                style={{
-                  fontSize: "0.95rem",
-                  fontWeight: "600",
-                  color: "#1A1612",
-                  margin: 0,
-                }}
-              >
-                Inventory Management System
-              </p>
-              <p
-                style={{
-                  fontSize: "0.75rem",
-                  color: "#8A7A6A",
-                  margin: "0.2rem 0 0",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                Logged: Apr 2024 · Resolved
-              </p>
-            </div>
+          <Link href="/entry/inventory-management" className="index-link">
+            <p className="entry-title">Inventory Management System</p>
+            <p className="entry-date">Logged: Apr 2024 · Resolved</p>
           </Link>
 
-          <Link href="/entry/vobble" style={{ textDecoration: "none" }}>
-            <div style={{ cursor: "pointer" }}>
-              <p
-                style={{
-                  fontSize: "0.95rem",
-                  fontWeight: "600",
-                  color: "#1A1612",
-                  margin: 0,
-                }}
-              >
-                Vobble
-              </p>
-              <p
-                style={{
-                  fontSize: "0.75rem",
-                  color: "#8A7A6A",
-                  margin: "0.2rem 0 0",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                Logged: Feb 2026 · Resolved
-              </p>
-            </div>
+          <Link href="/entry/vobble" className="index-link">
+            <p className="entry-title">Vobble</p>
+            <p className="entry-date">Logged: Feb 2026 · Resolved</p>
           </Link>
 
-          <Link href="/entry/futloo-ai" style={{ textDecoration: "none" }}>
-            <div style={{ cursor: "pointer" }}>
-              <p
-                style={{
-                  fontSize: "0.95rem",
-                  fontWeight: "600",
-                  color: "#1A1612",
-                  margin: 0,
-                }}
-              >
-                Futloo AI
-              </p>
-              <p
-                style={{
-                  fontSize: "0.75rem",
-                  color: "#8A7A6A",
-                  margin: "0.2rem 0 0",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                Logged: Apr 2025 · Resolved
-              </p>
-            </div>
+          <Link href="/entry/futloo-ai" className="index-link">
+            <p className="entry-title">Futloo AI</p>
+            <p className="entry-date">Logged: Apr 2025 · Ongoing</p>
           </Link>
         </div>
       </div>
