@@ -11,15 +11,18 @@ const PAGE_ORDER: PageId[] = ["about", "index", "entry-left", "entry-right"];
 const C = {
   cream: "#F2EFE9",
   ink: "#1A1612",
-  inkMid: "#524633", // Elevated Contrast Pass for subtext and tech tags (5.2:1)
-  inkLight: "#574C40", // Elevated Contrast Pass for metadata labels/links (5.4:1)
-  inkSubhead: "#6E6052", // Safe, rich tone for uppercase section headers
+  inkMid: "#524633",
+  inkLight: "#574C40",
+  inkSubhead: "#6E6052",
   inkFaint: "#C8B89A",
   inkFaintest: "#E0D8CC",
   accent: "#B33622",
   tagBg: "#E8E0D5",
   spiral: "#9A8A7A",
   bg: "#1C1A18",
+  // NEW ENTRIES: High-visibility auditor purple tokens mapped natively into the theme system
+  visitedInk: "#581C87",
+  visitedInkLight: "#7C3AED",
 };
 
 // ── Spiral wire component ──────────────────────────────────────────────────
@@ -94,7 +97,6 @@ function Divider() {
 // ── Page content components ────────────────────────────────────────────────
 function AboutPage() {
   return (
-    // FIXED: Tightened the parent gap from 1.3rem to 0.85rem
     <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
       <div>
         <h1
@@ -111,11 +113,11 @@ function AboutPage() {
           style={{
             fontSize: "0.8rem",
             color: C.inkMid,
-            margin: "0.2rem 0 0", // Reduced top margin
+            margin: "0.2rem 0 0",
             letterSpacing: "0.05em",
           }}
         >
-          Full-Stack & Mobile Developer
+          Full-Stack &amp; Mobile Developer
         </p>
       </div>
 
@@ -125,7 +127,7 @@ function AboutPage() {
         style={{
           fontSize: "0.88rem",
           color: "#2A2218",
-          lineHeight: "1.6", // Marginally tightened line height from 1.8
+          lineHeight: "1.6",
           margin: 0,
         }}
       >
@@ -137,9 +139,7 @@ function AboutPage() {
         <p style={{ margin: 0, fontWeight: "600", color: C.ink }}>Vobble</p>
         <p style={{ margin: 0 }}>React Native Developer · Feb – Apr 2026</p>
         <p style={{ margin: "0.4rem 0 0", fontWeight: "600", color: C.ink }}>
-          {" "}
-          {/* Tightened gap */}
-          Futloo AI
+          Futloo
         </p>
         <p style={{ margin: 0 }}>Android Developer · Apr – Sep 2025</p>
       </div>
@@ -163,15 +163,13 @@ function AboutPage() {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-        {" "}
-        {/* Tightened gap */}
         <a
           href="https://www.linkedin.com/in/deepanshu-yadav-b240a7127/"
           target="_blank"
           rel="noopener noreferrer"
           style={{
             fontSize: "0.78rem",
-            color: C.inkLight, // Compliant light ink color
+            color: C.inkLight,
             textDecoration: "underline",
             letterSpacing: "0.03em",
           }}
@@ -184,7 +182,7 @@ function AboutPage() {
           rel="noopener noreferrer"
           style={{
             fontSize: "0.78rem",
-            color: C.inkLight, // Compliant light ink color
+            color: C.inkLight,
             textDecoration: "underline",
             letterSpacing: "0.03em",
           }}
@@ -197,7 +195,7 @@ function AboutPage() {
           fontSize: "0.82rem",
           color: C.inkLight,
           lineHeight: "1.75",
-          margin: "0.4rem 0 0", // Fixed: Cut top margin down from 1rem to 0.4rem
+          margin: "0.4rem 0 0",
           fontStyle: "italic",
         }}
       >
@@ -207,7 +205,13 @@ function AboutPage() {
   );
 }
 
-function IndexPage({ onOpenEntry }: { onOpenEntry: (slug: string) => void }) {
+function IndexPage({
+  onOpenEntry,
+  visitedSlugs,
+}: {
+  onOpenEntry: (slug: string) => void;
+  visitedSlugs: string[];
+}) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
       <h2
@@ -238,8 +242,8 @@ function IndexPage({ onOpenEntry }: { onOpenEntry: (slug: string) => void }) {
           Experience
         </p>
 
+        {/* VOBBLE BUTTON */}
         <button
-          key="vobble"
           onClick={() => onOpenEntry("vobble")}
           style={{
             background: "none",
@@ -250,12 +254,34 @@ function IndexPage({ onOpenEntry }: { onOpenEntry: (slug: string) => void }) {
           }}
           className="index-link"
         >
-          <p className="entry-title">Vobble</p>
-          <p className="entry-date">Logged: Feb – Apr 2026 · Resolved</p>
+          <p
+            className="entry-title"
+            style={{
+              fontSize: "0.95rem",
+              fontWeight: 600,
+              margin: 0,
+              color: visitedSlugs.includes("vobble") ? C.visitedInk : C.ink,
+            }}
+          >
+            Vobble
+          </p>
+          <p
+            className="entry-date"
+            style={{
+              fontSize: "0.75rem",
+              margin: "0.2rem 0 0",
+              letterSpacing: "0.05em",
+              color: visitedSlugs.includes("vobble")
+                ? C.visitedInkLight
+                : C.inkLight,
+            }}
+          >
+            Logged: Feb – Apr 2026 · Resolved
+          </p>
         </button>
 
+        {/* FUTLOO BUTTON */}
         <button
-          key="futloo-ai"
           onClick={() => onOpenEntry("futloo-ai")}
           style={{
             background: "none",
@@ -266,8 +292,30 @@ function IndexPage({ onOpenEntry }: { onOpenEntry: (slug: string) => void }) {
           }}
           className="index-link"
         >
-          <p className="entry-title">Futloo AI</p>
-          <p className="entry-date">Logged: Apr – Sep 2025 · Resolved</p>
+          <p
+            className="entry-title"
+            style={{
+              fontSize: "0.95rem",
+              fontWeight: 600,
+              margin: 0,
+              color: visitedSlugs.includes("futloo-ai") ? C.visitedInk : C.ink,
+            }}
+          >
+            Futloo
+          </p>
+          <p
+            className="entry-date"
+            style={{
+              fontSize: "0.75rem",
+              margin: "0.2rem 0 0",
+              letterSpacing: "0.05em",
+              color: visitedSlugs.includes("futloo-ai")
+                ? C.visitedInkLight
+                : C.inkLight,
+            }}
+          >
+            Logged: Apr – Sep 2025 · Resolved
+          </p>
         </button>
 
         <p
@@ -283,8 +331,8 @@ function IndexPage({ onOpenEntry }: { onOpenEntry: (slug: string) => void }) {
           Projects
         </p>
 
+        {/* KIZUNA BUTTON */}
         <button
-          key="kizuna"
           onClick={() => onOpenEntry("kizuna")}
           style={{
             background: "none",
@@ -295,12 +343,34 @@ function IndexPage({ onOpenEntry }: { onOpenEntry: (slug: string) => void }) {
           }}
           className="index-link"
         >
-          <p className="entry-title">Kizuna</p>
-          <p className="entry-date">Logged: May 2026 · Resolved</p>
+          <p
+            className="entry-title"
+            style={{
+              fontSize: "0.95rem",
+              fontWeight: 600,
+              margin: 0,
+              color: visitedSlugs.includes("kizuna") ? C.visitedInk : C.ink,
+            }}
+          >
+            Kizuna
+          </p>
+          <p
+            className="entry-date"
+            style={{
+              fontSize: "0.75rem",
+              margin: "0.2rem 0 0",
+              letterSpacing: "0.05em",
+              color: visitedSlugs.includes("kizuna")
+                ? C.visitedInkLight
+                : C.inkLight,
+            }}
+          >
+            Logged: May 2026 · Resolved
+          </p>
         </button>
 
+        {/* INVENTORY MANAGEMENT BUTTON */}
         <button
-          key="inventory-management"
           onClick={() => onOpenEntry("inventory-management")}
           style={{
             background: "none",
@@ -311,8 +381,32 @@ function IndexPage({ onOpenEntry }: { onOpenEntry: (slug: string) => void }) {
           }}
           className="index-link"
         >
-          <p className="entry-title">Inventory Management System</p>
-          <p className="entry-date">Logged: Apr 2024 · Resolved</p>
+          <p
+            className="entry-title"
+            style={{
+              fontSize: "0.95rem",
+              fontWeight: 600,
+              margin: 0,
+              color: visitedSlugs.includes("inventory-management")
+                ? C.visitedInk
+                : C.ink,
+            }}
+          >
+            Inventory Management System
+          </p>
+          <p
+            className="entry-date"
+            style={{
+              fontSize: "0.75rem",
+              margin: "0.2rem 0 0",
+              letterSpacing: "0.05em",
+              color: visitedSlugs.includes("inventory-management")
+                ? C.visitedInkLight
+                : C.inkLight,
+            }}
+          >
+            Logged: Apr 2024 · Resolved
+          </p>
         </button>
       </div>
     </div>
@@ -377,7 +471,7 @@ function EntryLeftPage({
           <div
             style={{
               fontSize: "1.05rem",
-              color: C.accent, // Brand ink red
+              color: C.accent,
               margin: "0.2rem 0 0",
               letterSpacing: "0.08em",
               fontFamily: "var(--font-handwritten)",
@@ -456,7 +550,7 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
           <p
             style={{
               fontSize: "1.05rem",
-              color: C.accent, // Using theme token (set C.accent to "#B33622" in tokens for perfect contrast)
+              color: C.accent,
               lineHeight: "1.8",
               margin: 0,
               fontStyle: "italic",
@@ -473,7 +567,6 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
                     {char}
                   </span>
                 ))}
-                {/* Re-inject clean spacing boundaries between words natively */}
                 <span style={{ display: "inline-block", whiteSpace: "pre" }}>
                   {" "}
                 </span>
@@ -486,7 +579,7 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
       <Divider />
 
       <div>
-        <Label>Tech Stack</Label>
+        <Label>Components</Label>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
           {entry.tech.map((t) => (
             <span
@@ -535,7 +628,7 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
               letterSpacing: "0.05em",
             }}
           >
-            App Store →
+            View App Store →
           </a>
         )}
         {entry.playStore && (
@@ -552,7 +645,7 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
               letterSpacing: "0.05em",
             }}
           >
-            Play Store →
+            View on Play Store →
           </a>
         )}
       </div>
@@ -570,7 +663,8 @@ export default function MobileJournal() {
   const contentRef = useRef<HTMLDivElement>(null);
   const [reducedMotionActive, setReducedMotionActive] = useState(false);
 
-  // Synchronize reduced motion tracker state safely on component layout load
+  const [visitedSlugs, setVisitedSlugs] = useState<string[]>([]);
+
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotionActive(mediaQuery.matches);
@@ -578,13 +672,21 @@ export default function MobileJournal() {
     const listener = (e: MediaQueryListEvent) =>
       setReducedMotionActive(e.matches);
     mediaQuery.addEventListener("change", listener);
+
+    try {
+      const stored = localStorage.getItem("mobile_visited_history");
+      if (stored) {
+        setVisitedSlugs(JSON.parse(stored));
+      }
+    } catch (e) {
+      console.warn("History retrieval locked:", e);
+    }
+
     return () => mediaQuery.removeEventListener("change", listener);
   }, []);
 
-  // Safely grab selected active data values to hand down to lifted hooks
   const selectedEntry = activeSlug ? entries[activeSlug] : null;
 
-  // Lifted Hooks: Bypasses motion delays automatically if user requests reduced motion
   const fallbackId = selectedEntry?.id ?? "";
   const fallbackAnomaly = selectedEntry?.anomaly ?? "";
 
@@ -635,6 +737,17 @@ export default function MobileJournal() {
 
   function openEntry(slug: string) {
     setActiveSlug(slug);
+
+    if (!visitedSlugs.includes(slug)) {
+      const updated = [...visitedSlugs, slug];
+      setVisitedSlugs(updated);
+      try {
+        localStorage.setItem("mobile_visited_history", JSON.stringify(updated));
+      } catch (e) {
+        console.warn("Failed syncing mobile history state:", e);
+      }
+    }
+
     navigate(2, "forward");
   }
 
@@ -776,7 +889,9 @@ export default function MobileJournal() {
             }}
           >
             {currentPage === "about" && <AboutPage />}
-            {currentPage === "index" && <IndexPage onOpenEntry={openEntry} />}
+            {currentPage === "index" && (
+              <IndexPage onOpenEntry={openEntry} visitedSlugs={visitedSlugs} />
+            )}
             {currentPage === "entry-left" && activeSlug && (
               <EntryLeftPage
                 slug={activeSlug}
