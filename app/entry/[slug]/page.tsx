@@ -288,7 +288,7 @@ export default function EntryPage({
               margin: "0 0 0.6rem",
             }}
           >
-            Tech Stack
+            Components
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
             {entry.tech.map((t) => (
