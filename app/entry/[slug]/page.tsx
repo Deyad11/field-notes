@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSceneLoaded } from "../../components/SceneContext";
 import ContactStamp from "@/app/components/ContactStamp";
 import { entries } from "../../lib/entries";
-
+import { useReveal } from "../../hooks/useReveal";
 export default function EntryPage({
   params,
 }: {
@@ -13,7 +13,8 @@ export default function EntryPage({
   const { slug } = use(params);
   const entry = entries[slug];
   const { journalOpen } = useSceneLoaded();
-
+  const revealedId = useReveal(entry.id ?? "", 2500, 55);
+  const revealedAnomaly = useReveal(entry.anomaly ?? "", 2500, 30);
   if (!entry) {
     return (
       <div style={{ color: "#F2EFE9", fontFamily: "monospace" }}>
@@ -84,18 +85,22 @@ export default function EntryPage({
           >
             Logged: {entry.logged} · {entry.status}
           </p>
+          {entry.id && (
+            <p
+              style={{
+                fontSize: "0.68rem",
+                color: "#8A7A6A",
+                margin: "0.2rem 0 0",
+                letterSpacing: "0.08em",
+                fontFamily: "monospace",
+                minHeight: "1em",
+              }}
+            >
+              {revealedId}
+            </p>
+          )}
         </div>
-        <p
-          style={{
-            fontSize: "0.7rem",
-            color: "#8A7A6A",
-            margin: "0.2rem 0 0",
-            letterSpacing: "0.08em",
-            fontFamily: "monospace",
-          }}
-        >
-          {entry.id}
-        </p>
+
         <hr
           style={{
             border: "none",
@@ -202,7 +207,7 @@ export default function EntryPage({
           </p>
         </div>
 
-        {entry.anomaly && (
+        {entry.anomaly && revealedAnomaly && (
           <p
             style={{
               fontSize: "0.8rem",
@@ -212,10 +217,9 @@ export default function EntryPage({
               fontStyle: "italic",
             }}
           >
-            {entry.anomaly}
+            {revealedAnomaly}
           </p>
         )}
-
         <div>
           <p
             style={{

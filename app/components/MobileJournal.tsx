@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { entries, entryOrder } from "../lib/entries";
 import ContactStamp from "./ContactStamp";
-
+import { useReveal } from "../hooks/useReveal";
 type PageId = "about" | "index" | "entry-left" | "entry-right";
 
 const PAGE_ORDER: PageId[] = ["about", "index", "entry-left", "entry-right"];
@@ -23,6 +23,7 @@ const C = {
 // ── Spiral wire component ──────────────────────────────────────────────────
 function SpiralWire() {
   const loops = 18;
+
   return (
     <div
       style={{
@@ -226,6 +227,7 @@ function EntryLeftPage({
 }) {
   const entry = entries[slug];
   if (!entry) return null;
+  const revealedId = useReveal(entry.id ?? "", 2500, 55);
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
       <button
@@ -265,6 +267,20 @@ function EntryLeftPage({
         >
           Logged: {entry.logged} · {entry.status}
         </p>
+        {entry.id && (
+          <p
+            style={{
+              fontSize: "0.68rem",
+              color: C.inkLight,
+              margin: "0.2rem 0 0",
+              letterSpacing: "0.08em",
+              fontFamily: "monospace",
+              minHeight: "1em",
+            }}
+          >
+            {revealedId}
+          </p>
+        )}
       </div>
 
       <Divider />
@@ -303,6 +319,7 @@ function EntryLeftPage({
 function EntryRightPage({ slug }: { slug: string }) {
   const entry = entries[slug];
   if (!entry) return null;
+  const revealedAnomaly = useReveal(entry.anomaly ?? "", 2500, 30);
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
       <div>
@@ -319,7 +336,7 @@ function EntryRightPage({ slug }: { slug: string }) {
         </p>
       </div>
 
-      {entry.anomaly && (
+      {entry.anomaly && revealedAnomaly && (
         <p
           style={{
             fontSize: "0.82rem",
@@ -329,7 +346,7 @@ function EntryRightPage({ slug }: { slug: string }) {
             fontStyle: "italic",
           }}
         >
-          {entry.anomaly}
+          {revealedAnomaly}
         </p>
       )}
 
