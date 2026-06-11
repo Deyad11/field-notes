@@ -136,6 +136,7 @@ export default function Home() {
           </p>
         </div>
 
+        {/* FIXED: Changed don't to don&apos;t to pass compiler rules */}
         <p
           style={{
             fontSize: "0.82rem",
@@ -145,7 +146,7 @@ export default function Home() {
             fontStyle: "italic",
           }}
         >
-          Last edited at a time I don't remember.
+          Last edited at a time I don&apos;t remember.
         </p>
       </div>
 

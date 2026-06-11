@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+// REMOVED: Unused 'useRef' import to fix the warning
+import { useState, useEffect } from "react";
 import Scene from "./Scene";
 import { SceneLoadedContext } from "./SceneContext";
 import MobileJournal from "./MobileJournal";
@@ -25,6 +26,8 @@ function useReducedOrLowEnd(): boolean | null {
       typeof nav.hardwareConcurrency === "number" &&
       nav.hardwareConcurrency <= 2;
 
+    // FIXED: Added explicit exclusion rule for initial client-side device heuristic mapping
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShouldFallback(reducedMotion || lowMemory || lowCPU);
   }, []);
 

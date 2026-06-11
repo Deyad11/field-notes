@@ -3,6 +3,11 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* FIXED: Mapped natively to Next.js font variables from layout.tsx */
+  --font-body: var(--font-crimson-pro), Georgia, serif;
+  --font-handwritten: var(--font-caveat), cursive;
+  --font-ui: monospace;
 }
 
 @theme inline {
@@ -19,11 +24,14 @@
   }
 }
 
+/* --- Base Body Reset --- */
 body {
   background: transparent;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body); /* Cleaned up duplicate and set to custom font */
 }
+
+/* --- Journal Index Link Styles --- */
 .index-link {
   text-decoration: none;
   display: block;
@@ -35,7 +43,7 @@ body {
   font-weight: 600;
   color: #1A1612;
   margin: 0;
-  transition: color 0.25s ease;
+  transition: color 0.3s ease, filter 0.3s ease; /* Added filter transition for smooth un-hover */
 }
 
 .index-link .entry-date {
@@ -46,25 +54,7 @@ body {
   transition: color 0.25s ease;
 }
 
-.index-link:hover .entry-title,
-.index-link:hover .entry-date {
-  color: #C84B31;
-}
-@keyframes pulsePrompt {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.85; }
-}
-body {
-  background: transparent;
-  color: var(--foreground);
-  font-family: 'Crimson Pro', Georgia, serif;
-}
-
-:root {
-  --font-body: 'Crimson Pro', Georgia, serif;
-  --font-handwritten: 'Caveat', cursive;
-  --font-ui: monospace;
-}
+/* --- Ink Bleed Hover States --- */
 .index-link:hover .entry-title {
   color: #962D2D; /* Red bleeding ink tone */
   filter: url(#ink-bleed); /* Hooks into the invisible SVG element on page */
@@ -74,7 +64,7 @@ body {
   color: #C84B31;
 }
 
-/* --- Keyframe Animations --- */
+/* --- Keyframe Animations (De-duplicated) --- */
 @keyframes pulsePrompt {
   0%, 100% { opacity: 0.4; }
   50% { opacity: 0.85; }

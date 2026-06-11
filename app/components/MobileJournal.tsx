@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { entries, entryOrder } from "../lib/entries";
 import ContactStamp from "./ContactStamp";
 import { useReveal } from "../hooks/useReveal";
+
 type PageId = "about" | "index" | "entry-left" | "entry-right";
 
 const PAGE_ORDER: PageId[] = ["about", "index", "entry-left", "entry-right"];
@@ -90,8 +91,6 @@ function Divider() {
 }
 
 // ── Page content components ────────────────────────────────────────────────
-// In MobileJournal.tsx — replace the entire AboutPage function with this:
-
 function AboutPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
@@ -168,7 +167,7 @@ function AboutPage() {
           fontStyle: "italic",
         }}
       >
-        Last edited at a time I don't remember.
+        Last edited at a time I don&apos;t remember.
       </p>
     </div>
   );
@@ -218,16 +217,20 @@ function IndexPage({ onOpenEntry }: { onOpenEntry: (slug: string) => void }) {
   );
 }
 
+interface EntryLeftPageProps {
+  slug: string;
+  onBackToIndex: () => void;
+  revealedId: string;
+}
+
 function EntryLeftPage({
   slug,
   onBackToIndex,
-}: {
-  slug: string;
-  onBackToIndex: () => void;
-}) {
+  revealedId,
+}: EntryLeftPageProps) {
   const entry = entries[slug];
   if (!entry) return null;
-  const revealedId = useReveal(entry.id ?? "", 2500, 55);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
       <button
@@ -275,7 +278,6 @@ function EntryLeftPage({
               margin: "0.2rem 0 0",
               letterSpacing: "0.08em",
               fontFamily: "var(--font-handwritten)",
-
               minHeight: "1em",
             }}
           >
@@ -317,10 +319,15 @@ function EntryLeftPage({
   );
 }
 
-function EntryRightPage({ slug }: { slug: string }) {
+interface EntryRightPageProps {
+  slug: string;
+  revealedAnomaly: string;
+}
+
+function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
   const entry = entries[slug];
   if (!entry) return null;
-  const revealedAnomaly = useReveal(entry.anomaly ?? "", 2500, 30);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
       <div>
@@ -429,17 +436,22 @@ function EntryRightPage({ slug }: { slug: string }) {
   );
 }
 
-// ── Contact popup ──────────────────────────────────────────────────────────
-
 // ── Main component ─────────────────────────────────────────────────────────
 export default function MobileJournal() {
-  const [pageIndex, setPageIndex] = useState(0); // 0=about 1=index 2=entry-left 3=entry-right
+  const [pageIndex, setPageIndex] = useState(0);
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   const [animating, setAnimating] = useState(false);
   const [direction, setDirection] = useState<"forward" | "back">("forward");
   const [visible, setVisible] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useRef(false);
+
+  // Safely grab selected active data values to hand down to lifted hooks
+  const selectedEntry = activeSlug ? entries[activeSlug] : null;
+
+  // Lifted Hooks: Safe from conditional branches, running uninterrupted at root level
+  const revealedId = useReveal(selectedEntry?.id ?? "", 2500, 55);
+  const revealedAnomaly = useReveal(selectedEntry?.anomaly ?? "", 2500, 30);
 
   useEffect(() => {
     prefersReducedMotion.current = window.matchMedia(
@@ -488,7 +500,6 @@ export default function MobileJournal() {
   const canGoBack = pageIndex > 0;
   const canGoForward = currentPage === "about" || currentPage === "entry-left";
 
-  // slide translate values
   const slideOut = direction === "forward" ? "-60px" : "60px";
   const slideIn = direction === "forward" ? "60px" : "-60px";
 
@@ -504,7 +515,6 @@ export default function MobileJournal() {
         overflowY: "auto",
       }}
     >
-      {/* notebook wrapper */}
       <div
         style={{
           width: "min(440px, 100vw)",
@@ -528,8 +538,6 @@ export default function MobileJournal() {
           }}
         >
           <SpiralWire />
-
-          {/* page counter */}
           <span
             style={{
               position: "absolute",
@@ -547,7 +555,7 @@ export default function MobileJournal() {
           </span>
         </div>
 
-        {/* ── TAP ZONE — PREVIOUS (top) ── */}
+        {/* ── TAP ZONE — PREVIOUS ── */}
         {canGoBack && (
           <button
             onClick={goBack}
@@ -592,7 +600,6 @@ export default function MobileJournal() {
             position: "relative",
           }}
         >
-          {/* center ruled line — steno pad signature */}
           <div
             style={{
               position: "absolute",
@@ -606,7 +613,6 @@ export default function MobileJournal() {
             }}
           />
 
-          {/* animated page content */}
           <div
             style={{
               position: "relative",
@@ -623,15 +629,22 @@ export default function MobileJournal() {
             {currentPage === "about" && <AboutPage />}
             {currentPage === "index" && <IndexPage onOpenEntry={openEntry} />}
             {currentPage === "entry-left" && activeSlug && (
-              <EntryLeftPage slug={activeSlug} onBackToIndex={backToIndex} />
+              <EntryLeftPage
+                slug={activeSlug}
+                onBackToIndex={backToIndex}
+                revealedId={revealedId}
+              />
             )}
             {currentPage === "entry-right" && activeSlug && (
-              <EntryRightPage slug={activeSlug} />
+              <EntryRightPage
+                slug={activeSlug}
+                revealedAnomaly={revealedAnomaly}
+              />
             )}
           </div>
         </div>
 
-        {/* ── TAP ZONE — NEXT (bottom) ── */}
+        {/* ── TAP ZONE — NEXT ── */}
         {canGoForward && (
           <button
             onClick={goForward}
@@ -669,7 +682,6 @@ export default function MobileJournal() {
         )}
 
         {/* ── CONTACT STAMP ── */}
-        {/* CONTACT STAMP */}
         <div
           style={{
             position: "fixed",

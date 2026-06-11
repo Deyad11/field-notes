@@ -1,6 +1,23 @@
 import type { Metadata } from "next";
+import { Crimson_Pro, Caveat } from "next/font/google";
 import ClientLayout from "./components/ClientLayout";
 import "./globals.css";
+
+// Configure optimized Google fonts natively
+const crimsonPro = Crimson_Pro({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-crimson-pro", // Connects local font map to a class hook
+  display: "swap",
+});
+
+const caveat = Caveat({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  variable: "--font-caveat",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Deepanshu Yadav — Full-Stack Developer",
@@ -15,19 +32,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body>
+      {/* The raw link tags have been completely removed. 
+        Next.js injects font asset optimization tags under the hood.
+      */}
+      <body className={`${crimsonPro.variable} ${caveat.variable} antialiased`}>
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
