@@ -65,3 +65,17 @@ body {
   --font-handwritten: 'Caveat', cursive;
   --font-ui: monospace;
 }
+.index-link:hover .entry-title {
+  color: #962D2D; /* Red bleeding ink tone */
+  filter: url(#ink-bleed); /* Hooks into the invisible SVG element on page */
+}
+
+.index-link:hover .entry-date {
+  color: #C84B31;
+}
+
+/* --- Keyframe Animations --- */
+@keyframes pulsePrompt {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.85; }
+}

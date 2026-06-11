@@ -20,7 +20,7 @@ export default function Home() {
         gap: "0",
         width: "min(900px, 95vw)",
         height: "min(580px, 80vh)",
-        boxShadow: "0 20px 40px rgba(0,0,0,0.2)", // Swapped the inset shadow to an outer one for the main container
+        boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
         opacity: journalOpen ? 1 : 0,
         transition: "opacity 1s ease 0.3s",
         borderRadius: "4px",
@@ -211,6 +211,28 @@ export default function Home() {
       </div>
 
       <ContactStamp />
+
+      {/* Hidden SVG Anchor for CSS Ink Bleed Filter Effects */}
+      <svg
+        style={{
+          position: "absolute",
+          width: 0,
+          height: 0,
+          pointerEvents: "none",
+        }}
+      >
+        <defs>
+          <filter id="ink-bleed">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.05"
+              numOctaves="2"
+              result="noise"
+            />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.5" />
+          </filter>
+        </defs>
+      </svg>
     </div>
   );
 }
