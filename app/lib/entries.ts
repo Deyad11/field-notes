@@ -28,7 +28,7 @@ export const entries: Record<string, Entry> = {
     findings:
       "Designed the database schema with forward compatibility in mind — structured for chapter bookmarking, reading progress, and title expansion without restructuring. Title collection is currently seeded manually — the architecture is built for the point when that changes.",
     anomaly:
-      "The Thursday titles have been here since yesterday. It is not Thursday.",
+        "The Thursday titles appeared before Thursday did.",
     tech: ["Next.js", "Tailwind CSS", "Supabase", "Socket.IO", "AniList API"],
     github: "https://github.com/Deyad11/kizuna.git",
   },
@@ -60,7 +60,7 @@ export const entries: Record<string, Entry> = {
     findings:
       "Redesign work shipped across multiple screens with consistent full-screen behaviour. Application stability improved. The drawer implementation became the pattern for similar interactions elsewhere in the app.",
     anomaly:
-      "The bug never appeared on my device. The ticket is still open.",
+        "The bug has never appeared on my device. The ticket is still open.",
     tech: ["React Native", "iOS", "Android", "CSS"],
     github: undefined,
     appStore: "https://apps.apple.com/us/app/vobble/id6759438576",
@@ -78,7 +78,7 @@ export const entries: Record<string, Entry> = {
     findings:
       "Deployed to the Google Play Store. The expiry-based recommendation mode worked as designed — expiring items surfaced as recipe context automatically, without the user needing to ask. Analytics and Clarity set up for behaviour tracking post-launch.",
     anomaly:
-      "Something in the inventory has been expiring soon for as long as anyone can remember.",
+  "The milk has been expiring in three days... for six months.",
     tech: ["React Native", "Redux", "Bedrock API", "Supabase", "Firebase", "OneSignal"],
     playStore: "https://play.google.com/store/apps/details?id=com.deyad.freshkeep",
     github: undefined,
@@ -113,6 +113,10 @@ url: "https://app.notion.com/p/Job-Finder-Ai-Companion-3651d194b73380ae87d3f74c7
 {
 label: "Fandom Platform Deep Dive",
 url: "https://app.notion.com/p/Fandom-Platform-Product-Deep-Dive-3701d194b7338057ac71f603184b9211",
+},
+{
+label: "Ø-3A",
+url: "#",
 },
 ],
 
