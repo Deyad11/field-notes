@@ -28,7 +28,6 @@ const C = {
 // ── Spiral wire component ──────────────────────────────────────────────────
 function SpiralWire() {
   const loops = 18;
-
   return (
     <div
       style={{
@@ -63,7 +62,6 @@ function SpiralWire() {
     </div>
   );
 }
-
 // ── Section label ──────────────────────────────────────────────────────────
 function Label({ children }: { children: React.ReactNode }) {
   return (
@@ -756,26 +754,35 @@ export default function MobileJournal() {
   const [visible, setVisible] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
   const [reducedMotionActive, setReducedMotionActive] = useState(false);
-
   const [visitedSlugs, setVisitedSlugs] = useState<string[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // ── DRAG Y-AXIS STATES FOR STAMP PLAYABILITY ──
+  const [stampY, setStampY] = useState(0);
+  const isDragging = useRef(false);
+  const startY = useRef(0);
+  const initialStampY = useRef(0);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotionActive(mediaQuery.matches);
-
     const listener = (e: MediaQueryListEvent) =>
       setReducedMotionActive(e.matches);
     mediaQuery.addEventListener("change", listener);
 
     try {
       const stored = localStorage.getItem("mobile_visited_history");
-      if (stored) {
-        setVisitedSlugs(JSON.parse(stored));
-      }
+      if (stored) setVisitedSlugs(JSON.parse(stored));
     } catch (e) {
       console.warn("History retrieval locked:", e);
     }
-
     return () => mediaQuery.removeEventListener("change", listener);
   }, []);
 
@@ -852,6 +859,43 @@ export default function MobileJournal() {
   const slideOut = direction === "forward" ? "-60px" : "60px";
   const slideIn = direction === "forward" ? "60px" : "-60px";
 
+  // ── DRAG EVENT LOGIC ──
+  const handleDragStart = (clientY: number) => {
+    isDragging.current = true;
+    startY.current = clientY;
+    initialStampY.current = stampY;
+  };
+
+  const handleDragMove = (clientY: number) => {
+    if (!isDragging.current) return;
+    const deltaY = clientY - startY.current;
+    setStampY(initialStampY.current + deltaY);
+  };
+
+  const handleDragEnd = () => {
+    isDragging.current = false;
+  };
+
+  useEffect(() => {
+    const onGlobalMove = (e: MouseEvent) => handleDragMove(e.clientY);
+    const onGlobalTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) handleDragMove(e.touches[0].clientY);
+    };
+    const onGlobalEnd = () => handleDragEnd();
+
+    window.addEventListener("mousemove", onGlobalMove);
+    window.addEventListener("mouseup", onGlobalEnd);
+    window.addEventListener("touchmove", onGlobalTouchMove, { passive: false });
+    window.addEventListener("touchend", onGlobalEnd);
+
+    return () => {
+      window.removeEventListener("mousemove", onGlobalMove);
+      window.removeEventListener("mouseup", onGlobalEnd);
+      window.removeEventListener("touchmove", onGlobalTouchMove);
+      window.removeEventListener("touchend", onGlobalEnd);
+    };
+  }, [stampY]);
+
   return (
     <div
       style={{
@@ -887,23 +931,7 @@ export default function MobileJournal() {
           }}
         >
           <SpiralWire />
-          <span
-            style={{
-              position: "absolute",
-              top: "50%",
-              right: "1rem",
-              transform: "translateY(-50%)",
-              fontSize: "0.62rem",
-              color: C.inkLight,
-              fontFamily: "monospace",
-              letterSpacing: "0.1em",
-              zIndex: 6,
-            }}
-          >
-            {pageIndex + 1} / {totalPages}
-          </span>
         </div>
-
         {/* ── TAP ZONE: PREVIOUS ── */}
         {canGoBack && (
           <button
@@ -939,14 +967,16 @@ export default function MobileJournal() {
             </span>
           </button>
         )}
-
         {/* ── PAGE CONTENT CONTAINER ── */}
         <div
           ref={contentRef}
           style={{
             flex: 1,
             overflowY: "auto",
-            padding: `${canGoBack ? "72px" : "1.5rem"} 1.6rem ${canGoForward ? "80px" : "4rem"}`,
+            paddingTop: canGoBack ? "72px" : "1.5rem",
+            paddingLeft: "1.6rem",
+            paddingRight: "1.6rem",
+            paddingBottom: "80px",
             position: "relative",
           }}
         >
@@ -1000,7 +1030,23 @@ export default function MobileJournal() {
             )}
           </div>
         </div>
-
+        {/* ── RIGHTMOST PAGE INDICATOR ──
+        <div
+          style={{
+            position: "absolute",
+            top: "54px", // Sits cleanly at the top-right corner level
+            right: "1rem", // Pushed all the way to the right edge lane
+            fontSize: "0.65rem",
+            color: C.inkLight,
+            fontFamily: "monospace",
+            letterSpacing: "0.22em", // Generous letter spacing
+            zIndex: 25,
+            pointerEvents: "none",
+            wordSpacing: "0.4rem",
+          }}
+        >
+          PAGE {pageIndex + 1} / {totalPages}
+        </div> */}
         {/* ── TAP ZONE: NEXT ── */}
         {canGoForward && (
           <button
@@ -1038,15 +1084,24 @@ export default function MobileJournal() {
             </span>
           </button>
         )}
-
-        {/* ── CONTACT STAMP ── */}
+        {/* ── PLAYABLE / DRAGGABLE STAMP CONTAINER ── */}
         <div
-          style={{
-            position: "fixed",
-            bottom: "1.5rem",
-            right: `max(1rem, calc((100vw - min(440px, 100vw)) / 2 + 1rem))`,
-            zIndex: 30,
+          onMouseDown={(e) => handleDragStart(e.clientY)}
+          onTouchStart={(e) => {
+            if (e.touches.length > 0) handleDragStart(e.touches[0].clientY);
           }}
+          style={{
+            position: "absolute",
+            zIndex: 30,
+            bottom: canGoForward ? "4.5rem" : "1.5rem",
+            right: "1.5rem",
+            transform: `translateY(${stampY}px)`,
+            cursor: "grab",
+            transition: isDragging.current
+              ? "none"
+              : "transform 0.15s ease-out",
+          }}
+          className="draggable-stamp-wrapper"
         >
           <ContactStamp />
         </div>
