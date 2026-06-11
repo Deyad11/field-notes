@@ -7,6 +7,7 @@ export function useReveal(text: string, delayMs = 2500, charIntervalMs = 45): st
   const [revealed, setRevealed] = useState("");
 
   useEffect(() => {
+    setRevealed(""); 
     if (!text) return;
     let charIndex = 0;
     let intervalId: ReturnType<typeof setInterval>;

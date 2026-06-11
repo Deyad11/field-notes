@@ -278,7 +278,6 @@ function EntryLeftPage({
               margin: "0.2rem 0 0",
               letterSpacing: "0.08em",
               fontFamily: "var(--font-handwritten)",
-              minHeight: "1.2em",
             }}
           >
             {revealedId}
@@ -344,8 +343,8 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
         </p>
       </div>
 
-      {entry.anomaly && (
-        <div style={{ minHeight: "3.5rem" }}>
+      {entry.anomaly && revealedAnomaly && (
+        <div>
           {revealedAnomaly && (
             <p
               style={{
