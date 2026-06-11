@@ -30,6 +30,7 @@ export default function ContactStamp() {
             position: "absolute",
             bottom: "calc(100% + 0.8rem)",
             right: 0,
+            cursor: "inherit",
             background: "#F2EFE9",
             border: "1px solid #C8B89A",
             borderRadius: "2px",
