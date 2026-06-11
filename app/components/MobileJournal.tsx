@@ -1,0 +1,608 @@
+"use client";
+import { useState, useRef, useEffect } from "react";
+import { entries, entryOrder } from "../lib/entries";
+import ContactStamp from "./ContactStamp";
+
+type PageId = "about" | "index" | "entry-left" | "entry-right";
+
+const PAGE_ORDER: PageId[] = ["about", "index", "entry-left", "entry-right"];
+
+const C = {
+  cream: "#F2EFE9",
+  ink: "#1A1612",
+  inkMid: "#5C4F3A",
+  inkLight: "#8A7A6A",
+  inkFaint: "#C8B89A",
+  inkFaintest: "#E0D8CC",
+  accent: "#C84B31",
+  tagBg: "#E8E0D5",
+  spiral: "#9A8A7A",
+  bg: "#1C1A18",
+};
+
+// ── Spiral wire component ──────────────────────────────────────────────────
+function SpiralWire() {
+  const loops = 18;
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: "44px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "0px",
+        zIndex: 5,
+        pointerEvents: "none",
+      }}
+    >
+      {Array.from({ length: loops }).map((_, i) => (
+        <div
+          key={i}
+          style={{
+            width: "22px",
+            height: "22px",
+            borderRadius: "50%",
+            border: `2px solid ${C.spiral}`,
+            borderBottom: "2px solid transparent",
+            flexShrink: 0,
+            marginLeft: i === 0 ? 0 : "-4px",
+            opacity: 0.7,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ── Section label ──────────────────────────────────────────────────────────
+function Label({ children }: { children: React.ReactNode }) {
+  return (
+    <p
+      style={{
+        fontSize: "0.62rem",
+        fontWeight: "700",
+        color: C.inkLight,
+        letterSpacing: "0.18em",
+        textTransform: "uppercase" as const,
+        margin: "0 0 0.35rem",
+      }}
+    >
+      {children}
+    </p>
+  );
+}
+
+function Divider() {
+  return (
+    <hr
+      style={{
+        border: "none",
+        borderTop: `1px solid ${C.inkFaint}`,
+        margin: "0.2rem 0",
+      }}
+    />
+  );
+}
+
+// ── Page content components ────────────────────────────────────────────────
+function AboutPage() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
+      <div>
+        <h1
+          style={{
+            fontSize: "1.25rem",
+            fontWeight: "700",
+            color: C.ink,
+            margin: 0,
+          }}
+        >
+          Deepanshu Yadav
+        </h1>
+        <p
+          style={{
+            fontSize: "0.8rem",
+            color: C.inkMid,
+            margin: "0.3rem 0 0",
+            letterSpacing: "0.05em",
+          }}
+        >
+          Full-Stack Developer
+        </p>
+      </div>
+
+      <Divider />
+
+      <p
+        style={{
+          fontSize: "0.88rem",
+          color: "#2A2218",
+          lineHeight: "1.8",
+          margin: 0,
+        }}
+      >
+        I tend to notice patterns before I understand them — in code, in people,
+        in stories.
+      </p>
+
+      <div style={{ fontSize: "0.82rem", color: C.inkMid, lineHeight: "1.7" }}>
+        <p style={{ margin: 0 }}>B.Tech CSE — NorthCap University</p>
+        <p style={{ margin: 0 }}>Full-Stack Specialization</p>
+      </div>
+
+      <p
+        style={{
+          fontSize: "0.88rem",
+          color: "#2A2218",
+          lineHeight: "1.8",
+          margin: 0,
+        }}
+      >
+        I read too many web novels. Some of them, I think, read back.
+      </p>
+    </div>
+  );
+}
+
+function IndexPage({ onOpenEntry }: { onOpenEntry: (slug: string) => void }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
+      <h2
+        style={{
+          fontSize: "0.68rem",
+          fontWeight: "700",
+          color: C.inkLight,
+          letterSpacing: "0.22em",
+          textTransform: "uppercase" as const,
+          margin: 0,
+        }}
+      >
+        Index
+      </h2>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
+        {entryOrder.map((slug) => {
+          const e = entries[slug];
+          return (
+            <button
+              key={slug}
+              onClick={() => onOpenEntry(slug)}
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                textAlign: "left",
+                cursor: "pointer",
+              }}
+              className="index-link"
+            >
+              <p className="entry-title">{e.title}</p>
+              <p className="entry-date">
+                Logged: {e.logged} · {e.status}
+              </p>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function EntryLeftPage({
+  slug,
+  onBackToIndex,
+}: {
+  slug: string;
+  onBackToIndex: () => void;
+}) {
+  const entry = entries[slug];
+  if (!entry) return null;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
+      <button
+        onClick={onBackToIndex}
+        style={{
+          background: "none",
+          border: "none",
+          padding: 0,
+          fontSize: "0.75rem",
+          color: C.inkLight,
+          letterSpacing: "0.05em",
+          cursor: "pointer",
+          textAlign: "left",
+        }}
+      >
+        ← Index
+      </button>
+
+      <div>
+        <h1
+          style={{
+            fontSize: "1.15rem",
+            fontWeight: "700",
+            color: C.ink,
+            margin: 0,
+          }}
+        >
+          {entry.title}
+        </h1>
+        <p
+          style={{
+            fontSize: "0.72rem",
+            color: C.inkLight,
+            margin: "0.3rem 0 0",
+            letterSpacing: "0.05em",
+          }}
+        >
+          Logged: {entry.logged} · {entry.status}
+        </p>
+      </div>
+
+      <Divider />
+
+      <div>
+        <Label>Observation</Label>
+        <p
+          style={{
+            fontSize: "0.86rem",
+            color: "#2A2218",
+            lineHeight: "1.8",
+            margin: 0,
+          }}
+        >
+          {entry.observation}
+        </p>
+      </div>
+
+      <div>
+        <Label>Approach</Label>
+        <p
+          style={{
+            fontSize: "0.86rem",
+            color: "#2A2218",
+            lineHeight: "1.8",
+            margin: 0,
+          }}
+        >
+          {entry.approach}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function EntryRightPage({ slug }: { slug: string }) {
+  const entry = entries[slug];
+  if (!entry) return null;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
+      <div>
+        <Label>Findings</Label>
+        <p
+          style={{
+            fontSize: "0.86rem",
+            color: "#2A2218",
+            lineHeight: "1.8",
+            margin: 0,
+          }}
+        >
+          {entry.findings}
+        </p>
+      </div>
+
+      {entry.anomaly && (
+        <p
+          style={{
+            fontSize: "0.82rem",
+            color: C.inkMid,
+            lineHeight: "1.8",
+            margin: 0,
+            fontStyle: "italic",
+          }}
+        >
+          {entry.anomaly}
+        </p>
+      )}
+
+      <Divider />
+
+      <div>
+        <Label>Tech Stack</Label>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
+          {entry.tech.map((t) => (
+            <span
+              key={t}
+              style={{
+                fontSize: "0.73rem",
+                color: C.inkMid,
+                background: C.tagBg,
+                padding: "0.2rem 0.55rem",
+                borderRadius: "2px",
+              }}
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+
+        {entry.github && (
+          <a
+            href={entry.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "block",
+              marginTop: "0.8rem",
+              fontSize: "0.82rem",
+              color: C.inkMid,
+              textDecoration: "none",
+              letterSpacing: "0.05em",
+            }}
+          >
+            GitHub →
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Contact popup ──────────────────────────────────────────────────────────
+
+// ── Main component ─────────────────────────────────────────────────────────
+export default function MobileJournal() {
+  const [pageIndex, setPageIndex] = useState(0); // 0=about 1=index 2=entry-left 3=entry-right
+  const [activeSlug, setActiveSlug] = useState<string | null>(null);
+  const [animating, setAnimating] = useState(false);
+  const [direction, setDirection] = useState<"forward" | "back">("forward");
+  const [visible, setVisible] = useState(true);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useRef(false);
+
+  useEffect(() => {
+    prefersReducedMotion.current = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+  }, []);
+
+  const totalPages = activeSlug ? 4 : 2;
+  const currentPage = PAGE_ORDER[pageIndex];
+
+  function navigate(toIndex: number, dir: "forward" | "back") {
+    if (animating) return;
+    if (prefersReducedMotion.current) {
+      setPageIndex(toIndex);
+      if (contentRef.current) contentRef.current.scrollTop = 0;
+      return;
+    }
+    setDirection(dir);
+    setAnimating(true);
+    setVisible(false);
+    setTimeout(() => {
+      setPageIndex(toIndex);
+      if (contentRef.current) contentRef.current.scrollTop = 0;
+      setVisible(true);
+      setTimeout(() => setAnimating(false), 220);
+    }, 180);
+  }
+
+  function goForward() {
+    if (pageIndex < PAGE_ORDER.length - 1) navigate(pageIndex + 1, "forward");
+  }
+
+  function goBack() {
+    if (pageIndex > 0) navigate(pageIndex - 1, "back");
+  }
+
+  function openEntry(slug: string) {
+    setActiveSlug(slug);
+    navigate(2, "forward");
+  }
+
+  function backToIndex() {
+    navigate(1, "back");
+  }
+
+  const canGoBack = pageIndex > 0;
+  const canGoForward = currentPage === "about" || currentPage === "entry-left";
+
+  // slide translate values
+  const slideOut = direction === "forward" ? "-60px" : "60px";
+  const slideIn = direction === "forward" ? "60px" : "-60px";
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: C.bg,
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        overflowY: "auto",
+      }}
+    >
+      {/* notebook wrapper */}
+      <div
+        style={{
+          width: "min(440px, 100vw)",
+          minHeight: "100dvh",
+          background: C.cream,
+          position: "relative",
+          boxShadow: "0 0 80px rgba(0,0,0,0.8)",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {/* ── SPIRAL BINDING ── */}
+        <div
+          style={{
+            position: "relative",
+            height: "44px",
+            background: "#E8E0D4",
+            borderBottom: `1px solid ${C.inkFaint}`,
+            flexShrink: 0,
+            zIndex: 4,
+          }}
+        >
+          <SpiralWire />
+
+          {/* page counter */}
+          <span
+            style={{
+              position: "absolute",
+              top: "50%",
+              right: "1rem",
+              transform: "translateY(-50%)",
+              fontSize: "0.62rem",
+              color: C.inkLight,
+              fontFamily: "monospace",
+              letterSpacing: "0.1em",
+              zIndex: 6,
+            }}
+          >
+            {pageIndex + 1} / {totalPages}
+          </span>
+        </div>
+
+        {/* ── TAP ZONE — PREVIOUS (top) ── */}
+        {canGoBack && (
+          <button
+            onClick={goBack}
+            style={{
+              position: "absolute",
+              top: "44px",
+              left: 0,
+              right: 0,
+              height: "64px",
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              zIndex: 20,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.3rem",
+            }}
+            aria-label="Previous page"
+          >
+            <span
+              style={{
+                fontSize: "0.6rem",
+                color: C.inkLight,
+                letterSpacing: "0.12em",
+                fontFamily: "monospace",
+                opacity: 0.6,
+              }}
+            >
+              ↑ prev
+            </span>
+          </button>
+        )}
+
+        {/* ── PAGE CONTENT ── */}
+        <div
+          ref={contentRef}
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            padding: `${canGoBack ? "72px" : "1.5rem"} 1.6rem ${canGoForward ? "80px" : "2rem"}`,
+            position: "relative",
+          }}
+        >
+          {/* center ruled line — steno pad signature */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: "50%",
+              width: "1px",
+              background: `linear-gradient(to bottom, transparent 0%, ${C.inkFaintest} 8%, ${C.inkFaintest} 92%, transparent 100%)`,
+              pointerEvents: "none",
+              zIndex: 0,
+            }}
+          />
+
+          {/* animated page content */}
+          <div
+            style={{
+              position: "relative",
+              zIndex: 1,
+              opacity: visible ? 1 : 0,
+              transform: visible
+                ? "translateY(0)"
+                : `translateY(${animating && !visible ? slideOut : slideIn})`,
+              transition: visible
+                ? "opacity 0.22s ease, transform 0.22s ease"
+                : "opacity 0.18s ease, transform 0.18s ease",
+            }}
+          >
+            {currentPage === "about" && <AboutPage />}
+            {currentPage === "index" && <IndexPage onOpenEntry={openEntry} />}
+            {currentPage === "entry-left" && activeSlug && (
+              <EntryLeftPage slug={activeSlug} onBackToIndex={backToIndex} />
+            )}
+            {currentPage === "entry-right" && activeSlug && (
+              <EntryRightPage slug={activeSlug} />
+            )}
+          </div>
+        </div>
+
+        {/* ── TAP ZONE — NEXT (bottom) ── */}
+        {canGoForward && (
+          <button
+            onClick={goForward}
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: "64px",
+              background: `linear-gradient(to top, ${C.cream} 40%, transparent)`,
+              border: "none",
+              borderTop: `1px solid ${C.inkFaintest}`,
+              cursor: "pointer",
+              zIndex: 20,
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "center",
+              paddingBottom: "0.9rem",
+              gap: "0.3rem",
+            }}
+            aria-label="Next page"
+          >
+            <span
+              style={{
+                fontSize: "0.6rem",
+                color: C.inkLight,
+                letterSpacing: "0.12em",
+                fontFamily: "monospace",
+                opacity: 0.6,
+              }}
+            >
+              next ↓
+            </span>
+          </button>
+        )}
+
+        {/* ── CONTACT STAMP ── */}
+        {/* CONTACT STAMP */}
+        <div
+          style={{
+            position: "fixed",
+            bottom: "1.5rem",
+            right: `max(1rem, calc((100vw - min(440px, 100vw)) / 2 + 1rem))`,
+            zIndex: 30,
+          }}
+        >
+          <ContactStamp />
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -2,6 +2,8 @@
 import { useState } from "react";
 import Scene from "./Scene";
 import { SceneLoadedContext } from "./SceneContext";
+import MobileJournal from "./MobileJournal";
+import { useMobile } from "../hooks/useMobile";
 
 export default function ClientLayout({
   children,
@@ -10,7 +12,15 @@ export default function ClientLayout({
 }) {
   const [loaded, setLoaded] = useState(false);
   const [journalOpen, setJournalOpen] = useState(false);
+  const isMobile = useMobile();
 
+  // Not yet measured — render nothing to avoid flashing either experience
+  if (isMobile === null) return null;
+
+  // Mobile: self-contained steno-pad journal, no R3F
+  if (isMobile) return <MobileJournal />;
+
+  // Desktop: existing 3D scene + HTML journal overlay
   return (
     <SceneLoadedContext.Provider
       value={{ loaded, journalOpen, setJournalOpen }}
@@ -46,6 +56,7 @@ export default function ClientLayout({
           </p>
         </div>
       )}
+
       {journalOpen && (
         <div
           onClick={() => setJournalOpen(false)}
@@ -64,6 +75,7 @@ export default function ClientLayout({
           ✕ close
         </div>
       )}
+
       <main
         style={{
           position: "relative",

@@ -36,7 +36,7 @@ export default function ContactStamp() {
             padding: "1rem 1.2rem",
             display: "flex",
             flexDirection: "column",
-            gap: "0.6rem",
+            gap: "0.85rem",
             whiteSpace: "nowrap",
             boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
           }}
@@ -89,29 +89,31 @@ export default function ContactStamp() {
           height="64"
           style={{ position: "absolute" }}
         >
-          <path id="stampArc" d="M 10,32 a 22,22 0 1,1 44,0" fill="none" />
+          <path
+            id="stampArc"
+            d="M 32,32 m -22,0 a 22,22 0 1,1 44,0 a 22,22 0 1,1 -44,0"
+            fill="none"
+          />
           <text
             style={{
-              fontSize: "7.5px",
+              fontSize: "6.5px",
               fill: "#5C4F3A",
-              letterSpacing: "4px",
+              letterSpacing: "2.2px",
               fontFamily: "monospace",
             }}
           >
-            <textPath href="#stampArc">CONTACT</textPath>
+            <textPath href="#stampArc">CONTACT · CONTACT ·</textPath>
           </text>
         </svg>
         <span
           style={{
-            fontSize: "0.5rem",
+            fontSize: "1rem",
             color: "#5C4F3A",
-            letterSpacing: "0.15em",
             fontFamily: "monospace",
-            transform: "rotate(-15deg)",
-            display: "block",
+            lineHeight: 1,
           }}
         >
-          ◯
+          ✉
         </span>
       </div>
     </div>
