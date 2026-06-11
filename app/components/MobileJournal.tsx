@@ -20,9 +20,10 @@ const C = {
   tagBg: "#E8E0D5",
   spiral: "#9A8A7A",
   bg: "#1C1A18",
-  // NEW ENTRIES: High-visibility auditor purple tokens mapped natively into the theme system
   visitedInk: "#581C87",
   visitedInkLight: "#7C3AED",
+  // UPGRADED TOKEN: Weathered Graphite Pencil Lead for clean, independent visibility
+  pencilLead: "#78716C",
 };
 
 // ── Spiral wire component ──────────────────────────────────────────────────
@@ -242,7 +243,6 @@ function IndexPage({
           Experience
         </p>
 
-        {/* VOBBLE BUTTON */}
         <button
           onClick={() => onOpenEntry("vobble")}
           style={{
@@ -280,7 +280,6 @@ function IndexPage({
           </p>
         </button>
 
-        {/* FUTLOO BUTTON */}
         <button
           onClick={() => onOpenEntry("futloo-ai")}
           style={{
@@ -331,7 +330,6 @@ function IndexPage({
           Projects
         </p>
 
-        {/* KIZUNA BUTTON */}
         <button
           onClick={() => onOpenEntry("kizuna")}
           style={{
@@ -369,7 +367,6 @@ function IndexPage({
           </p>
         </button>
 
-        {/* INVENTORY MANAGEMENT BUTTON */}
         <button
           onClick={() => onOpenEntry("inventory-management")}
           style={{
@@ -522,15 +519,37 @@ function EntryLeftPage({
 
 interface EntryRightPageProps {
   slug: string;
+  onBackToIndex: () => void;
   revealedAnomaly: string;
 }
 
-function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
+function EntryRightPage({
+  slug,
+  onBackToIndex,
+  revealedAnomaly,
+}: EntryRightPageProps) {
   const entry = entries[slug];
   if (!entry) return null;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
+      <button
+        onClick={onBackToIndex}
+        style={{
+          background: "none",
+          border: "none",
+          padding: 0,
+          fontSize: "0.75rem",
+          color: C.inkLight,
+          letterSpacing: "0.05em",
+          cursor: "pointer",
+          textAlign: "left",
+          textDecoration: "underline",
+        }}
+      >
+        ← Index
+      </button>
+
       <div>
         <Label>Findings</Label>
         <p
@@ -686,7 +705,6 @@ export default function MobileJournal() {
   }, []);
 
   const selectedEntry = activeSlug ? entries[activeSlug] : null;
-
   const fallbackId = selectedEntry?.id ?? "";
   const fallbackAnomaly = selectedEntry?.anomaly ?? "";
 
@@ -737,7 +755,6 @@ export default function MobileJournal() {
 
   function openEntry(slug: string) {
     setActiveSlug(slug);
-
     if (!visitedSlugs.includes(slug)) {
       const updated = [...visitedSlugs, slug];
       setVisitedSlugs(updated);
@@ -747,7 +764,6 @@ export default function MobileJournal() {
         console.warn("Failed syncing mobile history state:", e);
       }
     }
-
     navigate(2, "forward");
   }
 
@@ -813,7 +829,7 @@ export default function MobileJournal() {
           </span>
         </div>
 
-        {/* ── TAP ZONE — PREVIOUS ── */}
+        {/* ── TAP ZONE: PREVIOUS (UPGRADED TO GRAPHITE PENCIL) ── */}
         {canGoBack && (
           <button
             onClick={goBack}
@@ -830,25 +846,26 @@ export default function MobileJournal() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: "0.3rem",
             }}
             aria-label="Previous page"
           >
             <span
+              className="pulse-text-mobile"
               style={{
-                fontSize: "0.6rem",
-                color: C.inkLight,
-                letterSpacing: "0.12em",
+                fontSize: "0.76rem",
+                color: C.pencilLead, // Pure graphite pencil shade
+                letterSpacing: "0.18em",
                 fontFamily: "monospace",
-                opacity: 0.6,
+                fontWeight: 600,
+                animation: "pulsePrompt 2.5s ease-in-out infinite",
               }}
             >
-              ↑ prev
+              ↑ PREV PAGE ...
             </span>
           </button>
         )}
 
-        {/* ── PAGE CONTENT ── */}
+        {/* ── PAGE CONTENT CONTAINER ── */}
         <div
           ref={contentRef}
           style={{
@@ -902,13 +919,14 @@ export default function MobileJournal() {
             {currentPage === "entry-right" && activeSlug && (
               <EntryRightPage
                 slug={activeSlug}
+                onBackToIndex={backToIndex}
                 revealedAnomaly={revealedAnomaly}
               />
             )}
           </div>
         </div>
 
-        {/* ── TAP ZONE — NEXT ── */}
+        {/* ── TAP ZONE: NEXT (UPGRADED TO GRAPHITE PENCIL) ── */}
         {canGoForward && (
           <button
             onClick={goForward}
@@ -926,21 +944,22 @@ export default function MobileJournal() {
               display: "flex",
               alignItems: "flex-end",
               justifyContent: "center",
-              paddingBottom: "0.9rem",
-              gap: "0.3rem",
+              paddingBottom: "1.1rem",
             }}
             aria-label="Next page"
           >
             <span
+              className="pulse-text-mobile"
               style={{
-                fontSize: "0.6rem",
-                color: C.inkLight,
-                letterSpacing: "0.12em",
+                fontSize: "0.76rem",
+                color: C.pencilLead, // Pure graphite pencil shade
+                letterSpacing: "0.18em",
                 fontFamily: "monospace",
-                opacity: 0.6,
+                fontWeight: 600,
+                animation: "pulsePrompt 2.5s ease-in-out infinite",
               }}
             >
-              next ↓
+              NEXT PAGE ↓ ...
             </span>
           </button>
         )}
