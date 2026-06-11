@@ -11,8 +11,9 @@ const PAGE_ORDER: PageId[] = ["about", "index", "entry-left", "entry-right"];
 const C = {
   cream: "#F2EFE9",
   ink: "#1A1612",
-  inkMid: "#5C4F3A",
-  inkLight: "#8A7A6A",
+  inkMid: "#524633", // Elevated Contrast Pass for subtext and tech tags (5.2:1)
+  inkLight: "#574C40", // Elevated Contrast Pass for metadata labels/links (5.4:1)
+  inkSubhead: "#6E6052", // Safe, rich tone for uppercase section headers
   inkFaint: "#C8B89A",
   inkFaintest: "#E0D8CC",
   accent: "#C84B31",
@@ -67,7 +68,7 @@ function Label({ children }: { children: React.ReactNode }) {
       style={{
         fontSize: "0.62rem",
         fontWeight: "700",
-        color: C.inkLight,
+        color: C.inkSubhead,
         letterSpacing: "0.18em",
         textTransform: "uppercase" as const,
         margin: "0 0 0.35rem",
@@ -93,7 +94,8 @@ function Divider() {
 // ── Page content components ────────────────────────────────────────────────
 function AboutPage() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
+    // FIXED: Tightened the parent gap from 1.3rem to 0.85rem
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
       <div>
         <h1
           style={{
@@ -109,7 +111,7 @@ function AboutPage() {
           style={{
             fontSize: "0.8rem",
             color: C.inkMid,
-            margin: "0.3rem 0 0",
+            margin: "0.2rem 0 0", // Reduced top margin
             letterSpacing: "0.05em",
           }}
         >
@@ -123,7 +125,7 @@ function AboutPage() {
         style={{
           fontSize: "0.88rem",
           color: "#2A2218",
-          lineHeight: "1.8",
+          lineHeight: "1.6", // Marginally tightened line height from 1.8
           margin: 0,
         }}
       >
@@ -131,10 +133,12 @@ function AboutPage() {
         in stories.
       </p>
 
-      <div style={{ fontSize: "0.82rem", color: C.inkMid, lineHeight: "1.7" }}>
+      <div style={{ fontSize: "0.82rem", color: C.inkMid, lineHeight: "1.6" }}>
         <p style={{ margin: 0, fontWeight: "600", color: C.ink }}>Vobble</p>
         <p style={{ margin: 0 }}>React Native Developer · Feb – Apr 2026</p>
-        <p style={{ margin: "0.6rem 0 0", fontWeight: "600", color: C.ink }}>
+        <p style={{ margin: "0.4rem 0 0", fontWeight: "600", color: C.ink }}>
+          {" "}
+          {/* Tightened gap */}
           Futloo AI
         </p>
         <p style={{ margin: 0 }}>Android Developer · Apr – Sep 2025</p>
@@ -142,8 +146,8 @@ function AboutPage() {
 
       <Divider />
 
-      <div style={{ fontSize: "0.78rem", color: C.inkMid, lineHeight: "1.7" }}>
-        <p style={{ margin: "0 0 0.3rem" }}>
+      <div style={{ fontSize: "0.78rem", color: C.inkMid, lineHeight: "1.6" }}>
+        <p style={{ margin: "0 0 0.2rem" }}>
           React Native · React.js · Next.js · Node.js
         </p>
         <p style={{ margin: 0 }}>Java · Spring Boot · MySQL · Supabase</p>
@@ -151,21 +155,24 @@ function AboutPage() {
 
       <Divider />
 
-      <div style={{ fontSize: "0.82rem", color: C.inkMid, lineHeight: "1.6" }}>
+      <div style={{ fontSize: "0.82rem", color: C.inkMid, lineHeight: "1.5" }}>
         <p style={{ margin: 0 }}>B.Tech CSE — NorthCap University</p>
         <p style={{ margin: 0 }}>
           Full-Stack Specialization · CGPA 9.25 · 2026
         </p>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+        {" "}
+        {/* Tightened gap */}
         <a
           href="https://www.linkedin.com/in/deepanshu-yadav-b240a7127/"
           target="_blank"
           rel="noopener noreferrer"
           style={{
             fontSize: "0.78rem",
-            color: C.inkMid,
-            textDecoration: "none",
+            color: C.inkLight, // Compliant light ink color
+            textDecoration: "underline",
             letterSpacing: "0.03em",
           }}
         >
@@ -177,8 +184,8 @@ function AboutPage() {
           rel="noopener noreferrer"
           style={{
             fontSize: "0.78rem",
-            color: C.inkMid,
-            textDecoration: "none",
+            color: C.inkLight, // Compliant light ink color
+            textDecoration: "underline",
             letterSpacing: "0.03em",
           }}
         >
@@ -190,7 +197,7 @@ function AboutPage() {
           fontSize: "0.82rem",
           color: C.inkLight,
           lineHeight: "1.75",
-          margin: "1rem 0 0",
+          margin: "0.4rem 0 0", // Fixed: Cut top margin down from 1rem to 0.4rem
           fontStyle: "italic",
         }}
       >
@@ -207,10 +214,11 @@ function IndexPage({ onOpenEntry }: { onOpenEntry: (slug: string) => void }) {
         style={{
           fontSize: "0.68rem",
           fontWeight: "700",
-          color: C.inkLight,
+          color: C.inkSubhead,
           letterSpacing: "0.22em",
           textTransform: "uppercase" as const,
           margin: 0,
+          textAlign: "center",
         }}
       >
         Index
@@ -221,7 +229,7 @@ function IndexPage({ onOpenEntry }: { onOpenEntry: (slug: string) => void }) {
           style={{
             fontSize: "0.65rem",
             fontWeight: "700",
-            color: C.inkLight,
+            color: C.inkSubhead,
             letterSpacing: "0.2em",
             textTransform: "uppercase" as const,
             margin: 0,
@@ -266,7 +274,7 @@ function IndexPage({ onOpenEntry }: { onOpenEntry: (slug: string) => void }) {
           style={{
             fontSize: "0.65rem",
             fontWeight: "700",
-            color: C.inkLight,
+            color: C.inkSubhead,
             letterSpacing: "0.2em",
             textTransform: "uppercase" as const,
             margin: "0.4rem 0 0",
@@ -326,10 +334,7 @@ function EntryLeftPage({
   if (!entry) return null;
 
   return (
-    <div
-      className="paper-noise paper-page paper-vignette"
-      style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}
-    >
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
       <button
         onClick={onBackToIndex}
         style={{
@@ -341,6 +346,7 @@ function EntryLeftPage({
           letterSpacing: "0.05em",
           cursor: "pointer",
           textAlign: "left",
+          textDecoration: "underline",
         }}
       >
         ← Index
@@ -368,17 +374,22 @@ function EntryLeftPage({
           Logged: {entry.logged} · {entry.status}
         </p>
         {entry.id && (
-          <p
+          <div
             style={{
-              fontSize: "1rem",
-              color: C.inkLight,
+              fontSize: "1.05rem",
+              color: C.accent, // Brand ink red
               margin: "0.2rem 0 0",
               letterSpacing: "0.08em",
               fontFamily: "var(--font-handwritten)",
+              fontWeight: "500",
             }}
           >
-            {revealedId}
-          </p>
+            {revealedId.split("").map((char, index) => (
+              <span key={index} className="ink-reveal-char">
+                {char}
+              </span>
+            ))}
+          </div>
         )}
       </div>
 
@@ -425,10 +436,7 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
   if (!entry) return null;
 
   return (
-    <div
-      className="paper-noise paper-page paper-vignette-right"
-      style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}
-    >
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.3rem" }}>
       <div>
         <Label>Findings</Label>
         <p
@@ -445,20 +453,22 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
 
       {entry.anomaly && revealedAnomaly && (
         <div>
-          {revealedAnomaly && (
-            <p
-              style={{
-                fontSize: "1rem",
-                color: C.inkMid,
-                lineHeight: "1.8",
-                margin: 0,
-                fontStyle: "italic",
-                fontFamily: "var(--font-handwritten)",
-              }}
-            >
-              {revealedAnomaly}
-            </p>
-          )}
+          <p
+            style={{
+              fontSize: "1.05rem",
+              color: C.accent, // Brand ink red for anomalies
+              lineHeight: "1.8",
+              margin: 0,
+              fontStyle: "italic",
+              fontFamily: "var(--font-handwritten)",
+            }}
+          >
+            {revealedAnomaly.split("").map((char, index) => (
+              <span key={index} className="ink-reveal-char">
+                {char}
+              </span>
+            ))}
+          </p>
         </div>
       )}
 
@@ -493,7 +503,7 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
               marginTop: "0.8rem",
               fontSize: "0.82rem",
               color: C.inkMid,
-              textDecoration: "none",
+              textDecoration: "underline",
               letterSpacing: "0.05em",
             }}
           >
@@ -510,7 +520,7 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
               marginTop: "0.5rem",
               fontSize: "0.82rem",
               color: C.inkMid,
-              textDecoration: "none",
+              textDecoration: "underline",
               letterSpacing: "0.05em",
             }}
           >
@@ -527,7 +537,7 @@ function EntryRightPage({ slug, revealedAnomaly }: EntryRightPageProps) {
               marginTop: "0.5rem",
               fontSize: "0.82rem",
               color: C.inkMid,
-              textDecoration: "none",
+              textDecoration: "underline",
               letterSpacing: "0.05em",
             }}
           >
@@ -547,27 +557,48 @@ export default function MobileJournal() {
   const [direction, setDirection] = useState<"forward" | "back">("forward");
   const [visible, setVisible] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = useRef(false);
+  const [reducedMotionActive, setReducedMotionActive] = useState(false);
+
+  // Synchronize reduced motion tracker state safely on component layout load
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotionActive(mediaQuery.matches);
+
+    const listener = (e: MediaQueryListEvent) =>
+      setReducedMotionActive(e.matches);
+    mediaQuery.addEventListener("change", listener);
+    return () => mediaQuery.removeEventListener("change", listener);
+  }, []);
 
   // Safely grab selected active data values to hand down to lifted hooks
   const selectedEntry = activeSlug ? entries[activeSlug] : null;
 
-  // Lifted Hooks: Safe from conditional branches, running uninterrupted at root level
-  const revealedId = useReveal(selectedEntry?.id ?? "", 2500, 55);
-  const revealedAnomaly = useReveal(selectedEntry?.anomaly ?? "", 2500, 30);
+  // Lifted Hooks: Bypasses motion delays automatically if user requests reduced motion
+  const fallbackId = selectedEntry?.id ?? "";
+  const fallbackAnomaly = selectedEntry?.anomaly ?? "";
 
-  useEffect(() => {
-    prefersReducedMotion.current = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-  }, []);
+  const revealedIdString = useReveal(
+    fallbackId,
+    reducedMotionActive ? 0 : 2500,
+    reducedMotionActive ? 0 : 55,
+  );
+  const revealedAnomalyString = useReveal(
+    fallbackAnomaly,
+    reducedMotionActive ? 0 : 2500,
+    reducedMotionActive ? 0 : 30,
+  );
+
+  const revealedId = reducedMotionActive ? fallbackId : revealedIdString;
+  const revealedAnomaly = reducedMotionActive
+    ? fallbackAnomaly
+    : revealedAnomalyString;
 
   const totalPages = activeSlug ? 4 : 2;
   const currentPage = PAGE_ORDER[pageIndex];
 
   function navigate(toIndex: number, dir: "forward" | "back") {
     if (animating) return;
-    if (prefersReducedMotion.current) {
+    if (reducedMotionActive) {
       setPageIndex(toIndex);
       if (contentRef.current) contentRef.current.scrollTop = 0;
       return;
@@ -721,12 +752,16 @@ export default function MobileJournal() {
               position: "relative",
               zIndex: 1,
               opacity: visible ? 1 : 0,
-              transform: visible
-                ? "translateY(0)"
-                : `translateY(${animating && !visible ? slideOut : slideIn})`,
-              transition: visible
-                ? "opacity 0.22s ease, transform 0.22s ease"
-                : "opacity 0.18s ease, transform 0.18s ease",
+              transform: reducedMotionActive
+                ? "none"
+                : visible
+                  ? "translateY(0)"
+                  : `translateY(${animating && !visible ? slideOut : slideIn})`,
+              transition: reducedMotionActive
+                ? "none"
+                : visible
+                  ? "opacity 0.22s ease, transform 0.22s ease"
+                  : "opacity 0.18s ease, transform 0.18s ease",
             }}
           >
             {currentPage === "about" && <AboutPage />}

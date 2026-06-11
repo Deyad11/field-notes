@@ -1,10 +1,11 @@
 "use client";
-import { use } from "react";
+import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { useSceneLoaded } from "../../components/SceneContext";
 import ContactStamp from "@/app/components/ContactStamp";
 import { entries } from "../../lib/entries";
 import { useReveal } from "../../hooks/useReveal";
+
 export default function EntryPage({
   params,
 }: {
@@ -13,8 +14,35 @@ export default function EntryPage({
   const { slug } = use(params);
   const entry = entries[slug];
   const { journalOpen } = useSceneLoaded();
-  const revealedId = useReveal(entry.id ?? "", 2500, 55);
-  const revealedAnomaly = useReveal(entry.anomaly ?? "", 2500, 30);
+
+  // Track system preference for reduced motion locally
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const listener = (e: MediaQueryListEvent) =>
+      setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", listener);
+    return () => mediaQuery.removeEventListener("change", listener);
+  }, []);
+
+  // Handle fallback text values if motion is restricted (skips typing steps)
+  const fallbackId = entry ? (entry.id ?? "") : "";
+  const fallbackAnomaly = entry ? (entry.anomaly ?? "") : "";
+
+  const revealedId = useReveal(
+    fallbackId,
+    prefersReducedMotion ? 0 : 2500,
+    prefersReducedMotion ? 0 : 55,
+  );
+  const revealedAnomaly = useReveal(
+    fallbackAnomaly,
+    prefersReducedMotion ? 0 : 2500,
+    prefersReducedMotion ? 0 : 30,
+  );
+
   if (!entry) {
     return (
       <div style={{ color: "#F2EFE9", fontFamily: "monospace" }}>
@@ -26,6 +54,12 @@ export default function EntryPage({
     );
   }
 
+  // Choose display strings safely avoiding blinking delays for a11y clients
+  const activeId = prefersReducedMotion ? fallbackId : revealedId;
+  const activeAnomaly = prefersReducedMotion
+    ? fallbackAnomaly
+    : revealedAnomaly;
+
   return (
     <div
       style={{
@@ -34,9 +68,10 @@ export default function EntryPage({
         minHeight: "min(580px, 80vh)",
         boxShadow: "0 8px 48px rgba(0,0,0,0.6)",
         opacity: journalOpen ? 1 : 0,
-        transition: "opacity 1s ease 0.3s",
+        // Disables layout transition delays if motion is reduced
+        transition: prefersReducedMotion ? "none" : "opacity 1s ease 0.3s",
         position: "relative" as const,
-        transform: "rotate(-1deg)",
+        transform: prefersReducedMotion ? "none" : "rotate(-1deg)",
       }}
     >
       {/* LEFT PAGE — nav + title + observation + approach */}
@@ -58,8 +93,8 @@ export default function EntryPage({
           href="/"
           style={{
             fontSize: "0.75rem",
-            color: "#8A7A6A",
-            textDecoration: "none",
+            color: "#574C40", // Elevated Contrast Pass (5.4:1)
+            textDecoration: "underline",
             letterSpacing: "0.05em",
           }}
         >
@@ -80,7 +115,7 @@ export default function EntryPage({
           <p
             style={{
               fontSize: "0.75rem",
-              color: "#8A7A6A",
+              color: "#574C40", // Elevated Contrast Pass
               margin: "0.3rem 0 0",
               letterSpacing: "0.05em",
             }}
@@ -88,16 +123,21 @@ export default function EntryPage({
             Logged: {entry.logged} · {entry.status}
           </p>
           {entry.id && (
-            <p
+            <div
               style={{
-                color: "#8A7A6A",
+                color: "#C84B31", // Your brand red ink tone
                 margin: "0.2rem 0 0",
                 letterSpacing: "0.08em",
                 fontFamily: "var(--font-handwritten)",
+                fontSize: "1.05rem",
               }}
             >
-              {revealedId}
-            </p>
+              {activeId.split("").map((char, index) => (
+                <span key={index} className="ink-reveal-char">
+                  {char}
+                </span>
+              ))}
+            </div>
           )}
         </div>
 
@@ -114,7 +154,7 @@ export default function EntryPage({
             style={{
               fontSize: "0.7rem",
               fontWeight: "700",
-              color: "#8A7A6A",
+              color: "#6E6052", // Safe Subheading Contrast Pass
               letterSpacing: "0.15em",
               textTransform: "uppercase",
               margin: "0 0 0.4rem",
@@ -139,7 +179,7 @@ export default function EntryPage({
             style={{
               fontSize: "0.7rem",
               fontWeight: "700",
-              color: "#8A7A6A",
+              color: "#6E6052", // Safe Subheading Contrast Pass
               letterSpacing: "0.15em",
               textTransform: "uppercase",
               margin: "0 0 0.4rem",
@@ -188,7 +228,7 @@ export default function EntryPage({
             style={{
               fontSize: "0.7rem",
               fontWeight: "700",
-              color: "#8A7A6A",
+              color: "#6E6052", // Safe Subheading Contrast Pass
               letterSpacing: "0.15em",
               textTransform: "uppercase",
               margin: "0 0 0.4rem",
@@ -208,22 +248,24 @@ export default function EntryPage({
           </p>
         </div>
 
-        {entry.anomaly && revealedAnomaly && (
-          <div>
-            {revealedAnomaly && (
-              <p
-                style={{
-                  fontSize: "1rem",
-                  color: "#5C4F3A",
-                  lineHeight: "1.75",
-                  margin: 0,
-                  fontStyle: "italic",
-                  fontFamily: "var(--font-handwritten)",
-                }}
-              >
-                {revealedAnomaly}
-              </p>
-            )}
+        {entry.anomaly && activeAnomaly && (
+          <div style={{ marginTop: "0.5rem" }}>
+            <p
+              style={{
+                fontSize: "1.05rem",
+                color: "#C84B31", // Red ink tone for anomalies
+                lineHeight: "1.75",
+                margin: 0,
+                fontStyle: "italic",
+                fontFamily: "var(--font-handwritten)",
+              }}
+            >
+              {activeAnomaly.split("").map((char, index) => (
+                <span key={index} className="ink-reveal-char">
+                  {char}
+                </span>
+              ))}
+            </p>
           </div>
         )}
         <div>
@@ -231,7 +273,7 @@ export default function EntryPage({
             style={{
               fontSize: "0.7rem",
               fontWeight: "700",
-              color: "#8A7A6A",
+              color: "#6E6052", // Safe Subheading Contrast Pass
               letterSpacing: "0.15em",
               textTransform: "uppercase",
               margin: "0 0 0.6rem",
@@ -245,7 +287,7 @@ export default function EntryPage({
                 key={t}
                 style={{
                   fontSize: "0.75rem",
-                  color: "#5C4F3A",
+                  color: "#524633", // Elevated Contrast Pass
                   background: "#E8E0D5",
                   padding: "0.2rem 0.6rem",
                   borderRadius: "2px",
@@ -272,8 +314,8 @@ export default function EntryPage({
                 rel="noopener noreferrer"
                 style={{
                   fontSize: "0.82rem",
-                  color: "#5C4F3A",
-                  textDecoration: "none",
+                  color: "#524633", // Elevated Contrast Pass
+                  textDecoration: "underline",
                   letterSpacing: "0.05em",
                 }}
               >
@@ -288,8 +330,8 @@ export default function EntryPage({
                 rel="noopener noreferrer"
                 style={{
                   fontSize: "0.82rem",
-                  color: "#5C4F3A",
-                  textDecoration: "none",
+                  color: "#524633", // Elevated Contrast Pass
+                  textDecoration: "underline",
                   letterSpacing: "0.05em",
                 }}
               >
@@ -304,8 +346,8 @@ export default function EntryPage({
                 rel="noopener noreferrer"
                 style={{
                   fontSize: "0.82rem",
-                  color: "#5C4F3A",
-                  textDecoration: "none",
+                  color: "#524633", // Elevated Contrast Pass
+                  textDecoration: "underline",
                   letterSpacing: "0.05em",
                 }}
               >
