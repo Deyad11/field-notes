@@ -157,7 +157,7 @@ function AboutPage() {
       <div style={{ fontSize: "0.82rem", color: C.inkMid, lineHeight: "1.5" }}>
         <p style={{ margin: 0 }}>B.Tech CSE — NorthCap University</p>
         <p style={{ margin: 0 }}>
-          Full-Stack Specialization · CGPA 9.25 · 2026
+          Full-Stack Specialization · CGPA 9.03 · 2026
         </p>
       </div>
 

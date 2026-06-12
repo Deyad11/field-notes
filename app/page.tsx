@@ -132,7 +132,7 @@ export default function Home() {
         >
           <p style={{ margin: 0 }}>B.Tech CSE — NorthCap University</p>
           <p style={{ margin: 0 }}>
-            Full-Stack Specialization · CGPA 9.25 · 2026
+            Full-Stack Specialization · CGPA 9.03 · 2026
           </p>
         </div>
         <div
